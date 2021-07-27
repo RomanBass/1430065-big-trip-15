@@ -1,3 +1,3 @@
-export const createEventsList = () => {
-  return '<ul class="trip-events__list"></ul>';
-};
+export const createEventsList = () => (
+  '<ul class="trip-events__list"></ul>'
+);
