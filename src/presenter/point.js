@@ -1,0 +1,123 @@
+import PointView from '../view/point';
+import EditFormView from '../view/edit-form.js';
+import { render, RenderPosition, replace, remove } from '../utils/render';
+import { BlankPoint } from '../utils/const';
+
+const Mode = { // определяет режим отображения - точка или форма редактирования
+  DEFAULT: 'DEFAULT',
+  EDITING: 'EDITING',
+};
+
+export default class Point {
+  constructor(eventListContainer, changeData, changeMode) {
+    this._eventListContainer = eventListContainer;
+    this._pointComponent = null;
+    this._editFormComponent = null;
+    this._changeData = changeData;
+    this._changeMode = changeMode;
+    this._mode = Mode.DEFAULT;
+
+    this._handlePointToEditFormClick = this._handlePointToEditFormClick.bind(this);
+    this._handleEditFormToPointClick = this._handleEditFormToPointClick.bind(this);
+    this._handleFavoriteButtonClick = this._handleFavoriteButtonClick.bind(this);
+    this._handleEditFormSubmit = this._handleEditFormSubmit.bind(this);
+    this._escKeyDownHandler = this._escKeyDownHandler.bind(this);
+  }
+
+  init(point) {
+    this._point = point;
+
+    const prevPointComponent = this._pointComponent;
+    const prevEditFormComponent = this._editFormComponent;
+
+    this._pointComponent = new PointView(point);
+    this._editFormComponent = new EditFormView(point);
+
+    this._pointComponent.setPointRollupButtonClickHandler(this._handlePointToEditFormClick);
+    this._editFormComponent.setEditFormRollupButtonClickHandler(this._handleEditFormToPointClick);
+    this._editFormComponent.setEditFormSubmitButtonClickHandler(this._handleEditFormSubmit);
+    this._pointComponent.setFavoriteButtonClickHandler(this._handleFavoriteButtonClick);
+
+    // if ((prevPointComponent === null || prevEditFormComponent === null) && this._point.id == BlankPoint.id) { // если это форма добавления, то отрисовывается в виде редактирования
+    //   render(this._eventListContainer, this._editFormComponent, RenderPosition.BEFOREEND);
+    //   this._mode = Mode.EDITING;
+    //   return;
+    // }
+
+    if (this._point.id === BlankPoint.id) { // чтобы не отрисовывалась точка по данным формы добавления
+      return;
+    }
+
+    if (prevPointComponent === null || prevEditFormComponent === null) {
+      render(this._eventListContainer, this._pointComponent, RenderPosition.BEFOREEND);
+      return;
+    }
+
+    if (this._mode === Mode.DEFAULT) {
+      replace(this._pointComponent, prevPointComponent);
+    }
+
+    if (this._mode === Mode.EDITING) {
+      replace(this._editFormComponent, prevEditFormComponent);
+    }
+
+    remove(prevPointComponent);
+    remove(prevEditFormComponent);
+  }
+
+  destroy() {
+    remove(this._pointComponent);
+    remove(this._editFormComponent);
+  }
+
+  _replacePointToForm() {
+    replace(this._editFormComponent, this._pointComponent.getElement());
+    document.addEventListener('keydown', this._escKeyDownHandler);
+    this._changeMode();
+    this._mode = Mode.EDITING;
+  }
+
+  _replaceEditFormToPoint() {
+    replace(this._pointComponent, this._editFormComponent);
+    document.removeEventListener('keydown', this._escKeyDownHandler);
+    this._mode = Mode.DEFAULT;
+  }
+
+  resetView() {
+    if (this._mode !== Mode.DEFAULT) {
+      this._replaceEditFormToPoint();
+    }
+  }
+
+  _escKeyDownHandler(evt) {
+    if (evt.key === 'Escape' || evt.key === 'Esc') {
+      evt.preventDefault();
+      this._replaceEditFormToPoint();
+      document.removeEventListener('keydown', this._escKeyDownHandler);
+    }
+  }
+
+  _handlePointToEditFormClick() { // клик по стрелке закрывает точку маршрута и открывает форму редактирования
+    this._replacePointToForm();
+  }
+
+  _handleEditFormToPointClick() { // клик по стрелке закрывает форму редактирования и открывает точку маршрута
+    this._replaceEditFormToPoint();
+  }
+
+  _handleFavoriteButtonClick() {
+    this._changeData(
+      Object.assign(
+        {},
+        this._point,
+        {isFavorite: !this._point.isFavorite},
+      ),
+    );
+  }
+
+  _handleEditFormSubmit(point) {
+    this._changeData(point);
+    this._replaceEditFormToPoint();
+  }
+
+}
