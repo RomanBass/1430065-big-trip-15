@@ -1,4 +1,6 @@
-export const createSortingTemplate = () => (
+import AbstractView from './abstract.js';
+
+const createSortingTemplate = () => (
   `<form class="trip-events__trip-sort  trip-sort" action="#" method="get">
   <div class="trip-sort__item  trip-sort__item--day">
     <input id="sort-day" class="trip-sort__input  visually-hidden" type="radio" name="trip-sort" value="sort-day" checked>
@@ -26,3 +28,25 @@ export const createSortingTemplate = () => (
   </div>
 </form>`
 );
+
+export default class Filter extends AbstractView {
+  constructor() {
+    super();
+
+    this._sortTypeChangeHandler = this._sortTypeChangeHandler.bind(this);
+  }
+
+  getTemplate() {
+    return createSortingTemplate();
+  }
+
+  _sortTypeChangeHandler(evt) {
+    //evt.preventDefault();
+    this._callback.sortTypeChange(evt.target.value);
+  }
+
+  setSortTypeChangeHandler(callback) {
+    this._callback.sortTypeChange = callback;
+    this.getElement().addEventListener('change', this._sortTypeChangeHandler);
+  }
+}
