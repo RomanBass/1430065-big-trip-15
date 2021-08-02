@@ -6,7 +6,7 @@ import { getRouteDates, getRoutePrice, getRouteName } from './utils/route.js';
 import {render, RenderPosition} from './utils/render.js';
 import TripPresenter from './presenter/trip.js';
 
-const POINTS_COUNT = 4;
+const POINTS_COUNT = 15;
 const points = new Array(POINTS_COUNT).fill().map(generatePoint); // массив точек маршрута
 
 const siteHeaderElement = document.querySelector('.page-header'); // крупный блок
