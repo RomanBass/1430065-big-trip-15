@@ -74,7 +74,7 @@ export default class Trip {
   }
 
   _renderPoints() {
-    this._renderPoint(BlankPoint);
+    //this._renderPoint(BlankPoint);
     this._points.slice().forEach((point) => this._renderPoint(point));
   }
 
