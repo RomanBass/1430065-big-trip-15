@@ -13,8 +13,8 @@ const createDataListTemplate = (cityName) => `<option value="${cityName}"></opti
 const createOptionTemplate = (offer, isChecked) => { //возвращает образец ДОМ элемента опции
   const {title, price} = offer;
   return `<div class="event__offer-selector">
-  <input class="event__offer-checkbox  visually-hidden" id="event-offer-luggage-1" type="checkbox" name="event-offer-luggage" ${isChecked}>
-  <label class="event__offer-label" for="event-offer-luggage-1">
+  <input class="event__offer-checkbox  visually-hidden" id="event-offer-${title}" type="checkbox" name="event-offer-${title}" ${isChecked}>
+  <label class="event__offer-label" for="event-offer-${title}">
     <span class="event__offer-title">${title}</span>
     &plus;&euro;&nbsp;
     <span class="event__offer-price">${price}</span>
@@ -281,7 +281,7 @@ export default class EditForm extends SmartView {
     }
 
     this._datepicker = flatpickr(
-      this.getElement().querySelector('.event__input--time'),
+      this.getElement().querySelector('.event__field-group--time input:nth-child(2)'),
       {
         enableTime: true,
         dateFormat: 'd/m/y H:i',
