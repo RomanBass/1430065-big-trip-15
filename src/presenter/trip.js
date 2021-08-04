@@ -4,7 +4,8 @@ import EventsListView from '../view/events-list.js';
 import {render, RenderPosition} from '../utils/render.js';
 import PointPresenter from './point.js';
 import { updateItem } from '../utils/common.js';
-import { BlankPoint, SortType } from '../utils/const.js';
+import { SortType } from '../utils/const.js';
+//import { BlankPoint, SortType } from '../utils/const.js';
 import { sortByDateFrom, sortByPrice, sortByDuration } from '../utils/route.js';
 import EditForm from '../view/edit-form.js';
 

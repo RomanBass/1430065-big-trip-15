@@ -211,8 +211,6 @@ export default class EditForm extends SmartView {
     this._destinationInputChangeHandler = this._destinationInputChangeHandler.bind(this);
     this._dateFromChangeHandler = this._dateFromChangeHandler.bind(this);
 
-console.log('call');
-
     this._setInnerHandlers();
     this._setDatepicker();
   }
