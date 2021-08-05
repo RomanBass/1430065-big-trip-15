@@ -275,20 +275,15 @@ export default class EditForm extends SmartView {
     }
 
     const SHORTEST_TRIP_IN_HOURS = 1; // прорабатывает случай, если дни старта и финиша совпадают, то время старта должно быть меньше времени финиша с разницей не менее часа (1 час выбрал сам)
-    let maxTimeLimit = '';
-    if (this._data.dateFrom.format('DD-MM-YY') === this._data.dateTo.format('DD-MM-YY')) {
-      maxTimeLimit = `${this._data.dateTo.format('HH') - SHORTEST_TRIP_IN_HOURS}:${this._data.dateTo.format('mm')}`;
-    }
 
     this._datepicker = flatpickr(
       this.getElement().querySelector('.event__field-group--time input:nth-child(2)'),
       {
         enableTime: true,
         dateFormat: 'd/m/y H:i',
-        maxDate: `${this._data.dateTo.format('DD')}/${this._data.dateTo.format('MM')}/${this._data.dateTo.format('YY')}`,
-        maxTime: maxTimeLimit,
+        maxDate: `${this._data.dateTo.format('DD')}/${this._data.dateTo.format('MM')}/${this._data.dateTo.format('YY')} ${this._data.dateTo.format('HH') - SHORTEST_TRIP_IN_HOURS}:${this._data.dateTo.format('mm')}`,
         defaultDate: `${this._data.dateFrom.format('DD')}/${this._data.dateFrom.format('MM')}/${this._data.dateFrom.format('YY')} ${this._data.dateFrom.format('HH')}:${this._data.dateFrom.format('mm')}`,
-        onChange: this._dateFromChangeHandler, //колбэк на изменение выбранной даты
+        onClose: this._dateFromChangeHandler, //колбэк на изменение выбранной даты
       },
     );
   }
