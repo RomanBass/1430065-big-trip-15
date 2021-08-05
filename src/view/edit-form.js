@@ -274,14 +274,12 @@ export default class EditForm extends SmartView {
       this._datepicker = null;
     }
 
-    const SHORTEST_TRIP_IN_HOURS = 1; // прорабатывает случай, если дни старта и финиша совпадают, то время старта должно быть меньше времени финиша с разницей не менее часа (1 час выбрал сам)
-
     this._datepicker = flatpickr(
       this.getElement().querySelector('.event__field-group--time input:nth-child(2)'),
       {
         enableTime: true,
         dateFormat: 'd/m/y H:i',
-        maxDate: `${this._data.dateTo.format('DD')}/${this._data.dateTo.format('MM')}/${this._data.dateTo.format('YY')} ${this._data.dateTo.format('HH') - SHORTEST_TRIP_IN_HOURS}:${this._data.dateTo.format('mm')}`,
+        maxDate: `${this._data.dateTo.format('DD')}/${this._data.dateTo.format('MM')}/${this._data.dateTo.format('YY')} ${this._data.dateTo.format('HH')}:${this._data.dateTo.format('mm')}`,
         defaultDate: `${this._data.dateFrom.format('DD')}/${this._data.dateFrom.format('MM')}/${this._data.dateFrom.format('YY')} ${this._data.dateFrom.format('HH')}:${this._data.dateFrom.format('mm')}`,
         onClose: this._dateFromChangeHandler, //колбэк на изменение выбранной даты
       },
