@@ -286,7 +286,7 @@ export default class EditForm extends SmartView {
     );
   }
 
-  _dateFromChangeHandler(userDate) {
+  _dateFromChangeHandler([userDate]) {
     this.updateData({
       dateFrom: dayjs(userDate),
     });
