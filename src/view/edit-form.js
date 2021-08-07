@@ -13,8 +13,8 @@ const createDataListTemplate = (cityName) => `<option value="${cityName}"></opti
 const createOptionTemplate = (offer, isChecked) => { //возвращает образец ДОМ элемента опции
   const {title, price} = offer;
   return `<div class="event__offer-selector">
-  <input class="event__offer-checkbox  visually-hidden" id="event-offer-luggage-1" type="checkbox" name="event-offer-luggage" ${isChecked}>
-  <label class="event__offer-label" for="event-offer-luggage-1">
+  <input class="event__offer-checkbox  visually-hidden" id="event-offer-${title}" type="checkbox" name="event-offer-${title}" ${isChecked}>
+  <label class="event__offer-label" for="event-offer-${title}">
     <span class="event__offer-title">${title}</span>
     &plus;&euro;&nbsp;
     <span class="event__offer-price">${price}</span>
@@ -203,16 +203,21 @@ export default class EditForm extends SmartView {
   constructor(point = BlankPoint) {
     super();
     this._data = point; // this._point заменён на this._data чтобы отнаследоваться от SmartView
-    this._datepicker = null;
+    this._dateFromPicker = null;
+    this._dateToPicker = null;
 
     this._editFormRollupButtonClickHandler = this._editFormRollupButtonClickHandler.bind(this);
     this._editFormSubmitButtonClickHandler = this._editFormSubmitButtonClickHandler.bind(this);
     this._typeFieldsetChangeHandler = this._typeFieldsetChangeHandler.bind(this);
     this._destinationInputChangeHandler = this._destinationInputChangeHandler.bind(this);
     this._dateFromChangeHandler = this._dateFromChangeHandler.bind(this);
+    this._dateToChangeHandler = this._dateToChangeHandler.bind(this);
 
     this._setInnerHandlers();
-    this._setDatepicker();
+    this._setDateFromPicker();
+    this._setDateToPicker();
+
+    //console.log('called');
   }
 
   getTemplate() {
@@ -258,7 +263,8 @@ export default class EditForm extends SmartView {
 
   restoreHandlers() { //восстанавливает все необходимые обработчики на новую форму редактирования
     this._setInnerHandlers();
-    this._setDatepicker();
+    this._setDateFromPicker();
+    this._setDateToPicker();
     this.setEditFormRollupButtonClickHandler(this._callback.editFormRollupButtonClick);
     this.setEditFormSubmitButtonClickHandler(this._callback.editFormSubmitButtonClick);
   }
@@ -268,34 +274,51 @@ export default class EditForm extends SmartView {
     this.getElement().querySelector('.event__input--destination').addEventListener('change', this._destinationInputChangeHandler); //вешает обработчик на input ввода названия города
   }
 
-  _setDatepicker() { // устанавливает окно ввода даты
-    if (this._datepicker) { // удаляет дом-мусор от ранее созданных окон flatpicker-а
-      this._datepicker.destroy(); // команда flatpicker-а
-      this._datepicker = null;
+  _setDateFromPicker() { // устанавливает окно ввода даты старта
+    if (this._dateFromPicker) { // удаляет дом-мусор от ранее созданных окон flatpicker-а
+      this._dateFromPicker.destroy(); // команда flatpicker-а
+      this._dateFromPicker = null;
     }
 
-    const SHORTEST_TRIP_IN_HOURS = 1; // прорабатывает случай, если дни старта и финиша совпадают, то время старта должно быть меньше времени финиша с разницей не менее часа (1 час выбрал сам)
-    let maxTimeLimit = '';
-    if (this._data.dateFrom.format('DD-MM-YY') === this._data.dateTo.format('DD-MM-YY')) {
-      maxTimeLimit = `${this._data.dateTo.format('HH') - SHORTEST_TRIP_IN_HOURS}:${this._data.dateTo.format('mm')}`;
-    }
-
-    this._datepicker = flatpickr(
-      this.getElement().querySelector('.event__input--time'),
+    this._dateFromPicker = flatpickr(
+      this.getElement().querySelector('.event__field-group--time input:nth-child(2)'),
       {
         enableTime: true,
         dateFormat: 'd/m/y H:i',
-        maxDate: `${this._data.dateTo.format('DD')}/${this._data.dateTo.format('MM')}/${this._data.dateTo.format('YY')}`,
-        maxTime: maxTimeLimit,
+        maxDate: `${this._data.dateTo.format('DD')}/${this._data.dateTo.format('MM')}/${this._data.dateTo.format('YY')} ${this._data.dateTo.format('HH')}:${this._data.dateTo.format('mm')}`,
         defaultDate: `${this._data.dateFrom.format('DD')}/${this._data.dateFrom.format('MM')}/${this._data.dateFrom.format('YY')} ${this._data.dateFrom.format('HH')}:${this._data.dateFrom.format('mm')}`,
-        onChange: this._dateFromChangeHandler, //колбэк на изменение выбранной даты
+        onClose: this._dateFromChangeHandler, //колбэк на изменение выбранной даты
       },
     );
   }
 
-  _dateFromChangeHandler(userDate) {
+  _dateFromChangeHandler([userDate]) {
     this.updateData({
       dateFrom: dayjs(userDate),
+    });
+  }
+
+  _setDateToPicker() { // устанавливает окно ввода даты окончания
+    if (this._dateToPicker) { // удаляет дом-мусор от ранее созданных окон flatpicker-а
+      this._dateToPicker.destroy(); // команда flatpicker-а
+      this._dateToPicker = null;
+    }
+
+    this._dateToPicker = flatpickr(
+      this.getElement().querySelector('.event__field-group--time input:nth-child(4)'),
+      {
+        enableTime: true,
+        dateFormat: 'd/m/y H:i',
+        minDate: `${this._data.dateFrom.format('DD')}/${this._data.dateFrom.format('MM')}/${this._data.dateFrom.format('YY')} ${this._data.dateFrom.format('HH')}:${this._data.dateFrom.format('mm')}`,
+        defaultDate: `${this._data.dateTo.format('DD')}/${this._data.dateTo.format('MM')}/${this._data.dateTo.format('YY')} ${this._data.dateTo.format('HH')}:${this._data.dateTo.format('mm')}`,
+        onClose: this._dateToChangeHandler, //колбэк на изменение выбранной даты
+      },
+    );
+  }
+
+  _dateToChangeHandler([userDate]) {
+    this.updateData({
+      dateTo: dayjs(userDate),
     });
   }
 }
