@@ -203,7 +203,7 @@ export default class EditForm extends SmartView {
   constructor(point = BlankPoint) {
     super();
     this._data = point; // this._point заменён на this._data чтобы отнаследоваться от SmartView
-    this._datepicker = null;
+    this._dateFromPicker = null;
 
     this._editFormRollupButtonClickHandler = this._editFormRollupButtonClickHandler.bind(this);
     this._editFormSubmitButtonClickHandler = this._editFormSubmitButtonClickHandler.bind(this);
@@ -212,7 +212,7 @@ export default class EditForm extends SmartView {
     this._dateFromChangeHandler = this._dateFromChangeHandler.bind(this);
 
     this._setInnerHandlers();
-    this._setDatepicker();
+    this._setDateFromPicker();
   }
 
   getTemplate() {
@@ -258,7 +258,7 @@ export default class EditForm extends SmartView {
 
   restoreHandlers() { //восстанавливает все необходимые обработчики на новую форму редактирования
     this._setInnerHandlers();
-    this._setDatepicker();
+    this._setDateFromPicker();
     this.setEditFormRollupButtonClickHandler(this._callback.editFormRollupButtonClick);
     this.setEditFormSubmitButtonClickHandler(this._callback.editFormSubmitButtonClick);
   }
@@ -268,13 +268,13 @@ export default class EditForm extends SmartView {
     this.getElement().querySelector('.event__input--destination').addEventListener('change', this._destinationInputChangeHandler); //вешает обработчик на input ввода названия города
   }
 
-  _setDatepicker() { // устанавливает окно ввода даты
-    if (this._datepicker) { // удаляет дом-мусор от ранее созданных окон flatpicker-а
-      this._datepicker.destroy(); // команда flatpicker-а
-      this._datepicker = null;
+  _setDateFromPicker() { // устанавливает окно ввода даты
+    if (this._dateFromPicker) { // удаляет дом-мусор от ранее созданных окон flatpicker-а
+      this._dateFromPicker.destroy(); // команда flatpicker-а
+      this._dateFromPicker = null;
     }
 
-    this._datepicker = flatpickr(
+    this._dateFromPicker = flatpickr(
       this.getElement().querySelector('.event__field-group--time input:nth-child(2)'),
       {
         enableTime: true,
