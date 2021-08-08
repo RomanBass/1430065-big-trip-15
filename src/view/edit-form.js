@@ -217,7 +217,6 @@ export default class EditForm extends SmartView {
     this._setDateFromPicker();
     this._setDateToPicker();
 
-    //console.log('called');
   }
 
   getTemplate() {
