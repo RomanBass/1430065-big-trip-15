@@ -203,16 +203,20 @@ export default class EditForm extends SmartView {
   constructor(point = BlankPoint) {
     super();
     this._data = point; // this._point заменён на this._data чтобы отнаследоваться от SmartView
-    this._datepicker = null;
+    this._dateFromPicker = null;
+    this._dateToPicker = null;
 
     this._editFormRollupButtonClickHandler = this._editFormRollupButtonClickHandler.bind(this);
     this._editFormSubmitButtonClickHandler = this._editFormSubmitButtonClickHandler.bind(this);
     this._typeFieldsetChangeHandler = this._typeFieldsetChangeHandler.bind(this);
     this._destinationInputChangeHandler = this._destinationInputChangeHandler.bind(this);
     this._dateFromChangeHandler = this._dateFromChangeHandler.bind(this);
+    this._dateToChangeHandler = this._dateToChangeHandler.bind(this);
 
     this._setInnerHandlers();
-    this._setDatepicker();
+    this._setDateFromPicker();
+    this._setDateToPicker();
+
   }
 
   getTemplate() {
@@ -258,7 +262,8 @@ export default class EditForm extends SmartView {
 
   restoreHandlers() { //восстанавливает все необходимые обработчики на новую форму редактирования
     this._setInnerHandlers();
-    this._setDatepicker();
+    this._setDateFromPicker();
+    this._setDateToPicker();
     this.setEditFormRollupButtonClickHandler(this._callback.editFormRollupButtonClick);
     this.setEditFormSubmitButtonClickHandler(this._callback.editFormSubmitButtonClick);
   }
@@ -268,13 +273,13 @@ export default class EditForm extends SmartView {
     this.getElement().querySelector('.event__input--destination').addEventListener('change', this._destinationInputChangeHandler); //вешает обработчик на input ввода названия города
   }
 
-  _setDatepicker() { // устанавливает окно ввода даты
-    if (this._datepicker) { // удаляет дом-мусор от ранее созданных окон flatpicker-а
-      this._datepicker.destroy(); // команда flatpicker-а
-      this._datepicker = null;
+  _setDateFromPicker() { // устанавливает окно ввода даты старта
+    if (this._dateFromPicker) { // удаляет дом-мусор от ранее созданных окон flatpicker-а
+      this._dateFromPicker.destroy(); // команда flatpicker-а
+      this._dateFromPicker = null;
     }
 
-    this._datepicker = flatpickr(
+    this._dateFromPicker = flatpickr(
       this.getElement().querySelector('.event__field-group--time input:nth-child(2)'),
       {
         enableTime: true,
@@ -289,6 +294,30 @@ export default class EditForm extends SmartView {
   _dateFromChangeHandler([userDate]) {
     this.updateData({
       dateFrom: dayjs(userDate),
+    });
+  }
+
+  _setDateToPicker() { // устанавливает окно ввода даты окончания
+    if (this._dateToPicker) { // удаляет дом-мусор от ранее созданных окон flatpicker-а
+      this._dateToPicker.destroy(); // команда flatpicker-а
+      this._dateToPicker = null;
+    }
+
+    this._dateToPicker = flatpickr(
+      this.getElement().querySelector('.event__field-group--time input:nth-child(4)'),
+      {
+        enableTime: true,
+        dateFormat: 'd/m/y H:i',
+        minDate: `${this._data.dateFrom.format('DD')}/${this._data.dateFrom.format('MM')}/${this._data.dateFrom.format('YY')} ${this._data.dateFrom.format('HH')}:${this._data.dateFrom.format('mm')}`,
+        defaultDate: `${this._data.dateTo.format('DD')}/${this._data.dateTo.format('MM')}/${this._data.dateTo.format('YY')} ${this._data.dateTo.format('HH')}:${this._data.dateTo.format('mm')}`,
+        onClose: this._dateToChangeHandler, //колбэк на изменение выбранной даты
+      },
+    );
+  }
+
+  _dateToChangeHandler([userDate]) {
+    this.updateData({
+      dateTo: dayjs(userDate),
     });
   }
 }
