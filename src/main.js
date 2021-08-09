@@ -5,9 +5,13 @@ import {generatePoint} from './mock/point.js';
 import { getRouteDates, getRoutePrice, getRouteName } from './utils/route.js';
 import {render, RenderPosition} from './utils/render.js';
 import TripPresenter from './presenter/trip.js';
+import PointsModel from './model/points.js';
 
 const POINTS_COUNT = 4;
 const points = new Array(POINTS_COUNT).fill().map(generatePoint); // массив точек маршрута
+
+const pointsModel = new PointsModel();
+pointsModel.setPoints(points);
 
 const siteHeaderElement = document.querySelector('.page-header'); // крупный блок
 const menuElement = siteHeaderElement.querySelector('.trip-controls__navigation'); // контейнеры...
@@ -22,7 +26,7 @@ if (points.length !== 0) { // элемент с информацией отри�
   render(tripElement, new InfoAndPriceView(getRoutePrice(points), getRouteDates(points), getRouteName(points)), RenderPosition.AFTERBEGIN);
 }
 
-const tripPresenter = new TripPresenter(tripEventsElement);
+const tripPresenter = new TripPresenter(tripEventsElement, pointsModel);
 tripPresenter.init(points);
 
 export {points};

@@ -10,7 +10,8 @@ import { sortByDateFrom, sortByPrice, sortByDuration } from '../utils/route.js';
 import EditForm from '../view/edit-form.js';
 
 export default class Trip {
-  constructor(tripContainer) {
+  constructor(tripContainer, pointsModel) {
+    this._pointsModel = pointsModel;
     this._tripContainer = tripContainer;
     this._sortingComponent = new SortingView();
     this._noPointComponent = new NoPointView();
@@ -43,6 +44,10 @@ export default class Trip {
       .values(this._pointPresenters)
       .forEach((presenter) => presenter.destroy());
     this._pointPresenters = {};
+  }
+
+  _getPoints() {
+    return this._pointsModel._getPoints();
   }
 
   _handleModeChange() {
