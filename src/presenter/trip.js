@@ -17,7 +17,7 @@ export default class Trip {
     this._noPointComponent = new NoPointView();
     this._eventsListComponent = new EventsListView();
     this._pointPresenters = {};
-    //this._currentSortType = SortType.BY_DATE_FROM;
+    this._currentSortType = SortType.BY_DATE_FROM;
     this._addFormComponent = new EditForm();
 
     this._handlePointChange = this._handlePointChange.bind(this);
@@ -27,7 +27,7 @@ export default class Trip {
 
   init(points) {
     this._points = points.slice();
-    this._points.sort(sortByDateFrom);
+    this._sortPoints(this._currentSortType);
     //this._sourcedPoints = points.slice(); // оригинальный массив точек, возможно понадобится в следующих заданиях
 
     if (points.length === 0) { // если точек нет, то отображается заглушка
@@ -104,6 +104,6 @@ export default class Trip {
         this._points.sort(sortByDuration);
         break;
     }
-    //this._currentSortType = sortType;
+    this._currentSortType = sortType;
   }
 }
