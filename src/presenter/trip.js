@@ -3,9 +3,8 @@ import NoPointView from '../view/no-point.js';
 import EventsListView from '../view/events-list.js';
 import {render, RenderPosition} from '../utils/render.js';
 import PointPresenter from './point.js';
-import { updateItem } from '../utils/common.js';
 import { SortType } from '../utils/const.js';
-//import { BlankPoint, SortType } from '../utils/const.js';
+///import { BlankPoint, SortType } from '../utils/const.js';
 import { sortByDateFrom, sortByPrice, sortByDuration } from '../utils/route.js';
 import EditForm from '../view/edit-form.js';
 
@@ -25,12 +24,8 @@ export default class Trip {
     this._handleSortTypeChange = this._handleSortTypeChange.bind(this);
   }
 
-  init(points) {
-    this._points = points.slice();
-    this._sortPoints(this._currentSortType);
-    //this._sourcedPoints = points.slice(); // оригинальный массив точек, возможно понадобится в следующих заданиях
-
-    if (points.length === 0) { // если точек нет, то отображается заглушка
+  init() {
+    if (this._getPoints().length === 0) { // если точек нет, то отображается заглушка
       this._renderNoPoints();
     } else {
       this._renderSort();
@@ -47,7 +42,14 @@ export default class Trip {
   }
 
   _getPoints() {
-    return this._pointsModel._getPoints();
+    switch (this._currentSortType) {
+      case SortType.BY_DATE_FROM:
+        return this._pointsModel.getPoints().slice().sort(sortByDateFrom);
+      case SortType.BY_PRICE:
+        return this._pointsModel.getPoints().slice().sort(sortByPrice);
+      case SortType.BY_DURATION:
+        return this._pointsModel.getPoints().slice().sort(sortByDuration);
+    }
   }
 
   _handleModeChange() {
@@ -57,13 +59,13 @@ export default class Trip {
   }
 
   _handlePointChange(updatedPoint) { // изменяет данные точки
-    this._points = updateItem(this._points, updatedPoint); // заменяет в моках точек объект с данными у изменённой точки
-    //this._sourcedPoints = updateItem(this._sourcedPoints, updatedPoint);
+    //this._points = updateItem(this._points, updatedPoint); // заменяет в моках точек объект с данными у изменённой точки
+    ///this._sourcedPoints = updateItem(this._sourcedPoints, updatedPoint);
     this._pointPresenters[updatedPoint.id].init(updatedPoint); // инициализирует презентер точки с обновлёнными данными
   }
 
   _handleSortTypeChange(sortType) {
-    this._sortPoints(sortType);
+    this._currentSortType = sortType;
     this._clearPointsList();
     this._renderPoints();
   }
@@ -80,8 +82,8 @@ export default class Trip {
   }
 
   _renderPoints() {
-    //this._renderPoint(BlankPoint);
-    this._points.slice().forEach((point) => this._renderPoint(point));
+    ///this._renderPoint(BlankPoint); возможно пригодится
+    this._getPoints().slice().forEach((point) => this._renderPoint(point));
   }
 
   _renderNoPoints() {
@@ -92,18 +94,4 @@ export default class Trip {
     render(this._tripContainer, this._eventsListComponent, RenderPosition.BEFOREEND);
   }
 
-  _sortPoints(sortType) {
-    switch (sortType) {
-      case SortType.BY_DATE_FROM:
-        this._points.sort(sortByDateFrom);
-        break;
-      case SortType.BY_PRICE:
-        this._points.sort(sortByPrice);
-        break;
-      case SortType.BY_DURATION:
-        this._points.sort(sortByDuration);
-        break;
-    }
-    this._currentSortType = sortType;
-  }
 }
