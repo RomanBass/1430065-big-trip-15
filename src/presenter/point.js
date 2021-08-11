@@ -2,6 +2,7 @@ import PointView from '../view/point';
 import EditFormView from '../view/edit-form.js';
 import { render, RenderPosition, replace, remove } from '../utils/render';
 import { BlankPoint } from '../utils/const';
+import { UserAction, UpdateType } from '../utils/const.js';
 
 const Mode = { // определяет режим отображения - точка или форма редактирования
   DEFAULT: 'DEFAULT',
@@ -107,6 +108,8 @@ export default class Point {
 
   _handleFavoriteButtonClick() {
     this._changeData(
+      UserAction.UPDATE_POINT,
+      UpdateType.PATCH,
       Object.assign(
         {},
         this._point,
@@ -116,7 +119,13 @@ export default class Point {
   }
 
   _handleEditFormSubmit(point) {
-    this._changeData(point);
+    //this._changeData(point);
+
+    this._changeData(
+      UserAction.UPDATE_POINT,
+      UpdateType.MINOR,
+      point,
+    );
     this._replaceEditFormToPoint();
   }
 

@@ -57,3 +57,15 @@ export const SortType = {
   BY_PRICE: 'sort-price',
   BY_DURATION: 'sort-time',
 };
+
+export const UserAction = {
+  UPDATE_TASK: 'UPDATE_POINT',
+  ADD_TASK: 'ADD_POINT',
+  DELETE_TASK: 'DELETE_POINT',
+};
+
+export const UpdateType = {
+  PATCH: 'PATCH',
+  MINOR: 'MINOR',
+  MAJOR: 'MAJOR',
+};

@@ -19,9 +19,11 @@ export default class Trip {
     this._currentSortType = SortType.BY_DATE_FROM;
     this._addFormComponent = new EditForm();
 
-    this._handlePointChange = this._handlePointChange.bind(this);
+    //this._handlePointChange = this._handlePointChange.bind(this);
     this._handleModeChange = this._handleModeChange.bind(this);
     this._handleSortTypeChange = this._handleSortTypeChange.bind(this);
+    this._handleViewAction = this._handleViewAction.bind(this);
+    this._handleModelEvent = this._handleModelEvent.bind(this);
   }
 
   init() {
@@ -58,10 +60,25 @@ export default class Trip {
       .forEach((presenter) => presenter.resetView());
   }
 
-  _handlePointChange(updatedPoint) { // изменяет данные точки
-    //this._points = updateItem(this._points, updatedPoint); // заменяет в моках точек объект с данными у изменённой точки
-    ///this._sourcedPoints = updateItem(this._sourcedPoints, updatedPoint);
-    this._pointPresenters[updatedPoint.id].init(updatedPoint); // инициализирует презентер точки с обновлёнными данными
+  // _handlePointChange(updatedPoint) { // изменяет данные точки
+  //   //this._points = updateItem(this._points, updatedPoint); // заменяет в моках точек объект с данными у изменённой точки
+  //   ///this._sourcedPoints = updateItem(this._sourcedPoints, updatedPoint);
+  //   this._pointPresenters[updatedPoint.id].init(updatedPoint); // инициализирует презентер точки с обновлёнными данными
+  // }
+
+  _handleViewAction(actionType, updateType, update) {
+    console.log(actionType, updateType, update);
+    //actionType -действие пользователя
+    //updateType - тип изменения
+    //update - обновлённые даные
+  }
+
+  _handleModelEvent(updateType, data) {
+    console.log(updateType, data);
+    //в зависимости от типа изменений решаем, что делать:
+    //- обновить часть списка
+    //- обновить список
+    //- обновить доску
   }
 
   _handleSortTypeChange(sortType) {
