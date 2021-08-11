@@ -4,7 +4,6 @@ import EventsListView from '../view/events-list.js';
 import {render, RenderPosition} from '../utils/render.js';
 import PointPresenter from './point.js';
 import { SortType } from '../utils/const.js';
-///import { BlankPoint, SortType } from '../utils/const.js';
 import { sortByDateFrom, sortByPrice, sortByDuration } from '../utils/route.js';
 import EditForm from '../view/edit-form.js';
 
@@ -19,11 +18,12 @@ export default class Trip {
     this._currentSortType = SortType.BY_DATE_FROM;
     this._addFormComponent = new EditForm();
 
-    //this._handlePointChange = this._handlePointChange.bind(this);
     this._handleModeChange = this._handleModeChange.bind(this);
     this._handleSortTypeChange = this._handleSortTypeChange.bind(this);
     this._handleViewAction = this._handleViewAction.bind(this);
     this._handleModelEvent = this._handleModelEvent.bind(this);
+
+    this._pointsModel.addObserver(this._handleModelEvent);
   }
 
   init() {
@@ -60,12 +60,6 @@ export default class Trip {
       .forEach((presenter) => presenter.resetView());
   }
 
-  // _handlePointChange(updatedPoint) { // изменяет данные точки
-  //   //this._points = updateItem(this._points, updatedPoint); // заменяет в моках точек объект с данными у изменённой точки
-  //   ///this._sourcedPoints = updateItem(this._sourcedPoints, updatedPoint);
-  //   this._pointPresenters[updatedPoint.id].init(updatedPoint); // инициализирует презентер точки с обновлёнными данными
-  // }
-
   _handleViewAction(actionType, updateType, update) {
     console.log(actionType, updateType, update);
     //actionType -действие пользователя
@@ -93,13 +87,13 @@ export default class Trip {
   }
 
   _renderPoint(point) {
-    const pointPresenter = new PointPresenter(this._eventsListComponent, this._handlePointChange, this._handleModeChange);
+    const pointPresenter = new PointPresenter(this._eventsListComponent, this._handleViewAction, this._handleModeChange);
     pointPresenter.init(point);
     this._pointPresenters[point.id] = pointPresenter;
   }
 
   _renderPoints() {
-    ///this._renderPoint(BlankPoint); возможно пригодится
+    ////this._renderPoint(BlankPoint);
     this._getPoints().slice().forEach((point) => this._renderPoint(point));
   }
 
