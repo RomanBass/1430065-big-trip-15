@@ -3,7 +3,7 @@ import NoPointView from '../view/no-point.js';
 import EventsListView from '../view/events-list.js';
 import {render, RenderPosition} from '../utils/render.js';
 import PointPresenter from './point.js';
-import { SortType } from '../utils/const.js';
+import { SortType, UpdateType, UserAction } from '../utils/const.js';
 import { sortByDateFrom, sortByPrice, sortByDuration } from '../utils/route.js';
 import EditForm from '../view/edit-form.js';
 
@@ -60,19 +60,34 @@ export default class Trip {
       .forEach((presenter) => presenter.resetView());
   }
 
-  _handleViewAction(actionType, updateType, update) {
-    console.log(actionType, updateType, update);
-    //actionType -действие пользователя
-    //updateType - тип изменения
-    //update - обновлённые даные
+  _handleViewAction(actionType, updateType, update) { //обрабатывает как отражается на модели действие на представлении
+    //console.log(actionType, updateType, update);
+    switch (actionType) {
+      case UserAction.UPDATE_POINT:
+        this._pointsModel.updatePoint(updateType, update);
+        break;
+      case UserAction.ADD_POINT:
+        this._pointsModel.addPoint(updateType, update);
+        break;
+      case UserAction.DELETE_POINT:
+        this._pointsModel.deletePoint(updateType, update);
+        break;
+    }
   }
 
-  _handleModelEvent(updateType, data) {
-    console.log(updateType, data);
-    //в зависимости от типа изменений решаем, что делать:
-    //- обновить часть списка
-    //- обновить список
-    //- обновить доску
+  _handleModelEvent(updateType, data) { // обрабатывает как отражается на представлении изменение в модели
+    //console.log(updateType, data);
+    switch (updateType) {
+      case UpdateType.PATCH:
+        this._pointPresenters[data.id].init(data);
+        break;
+      case UpdateType.MINOR:
+        // обновить список
+        break;
+      case UpdateType.MAJOR:
+        //обновить всю доску
+        break;
+    }
   }
 
   _handleSortTypeChange(sortType) {
