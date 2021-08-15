@@ -212,6 +212,7 @@ export default class EditForm extends SmartView {
     this._destinationInputChangeHandler = this._destinationInputChangeHandler.bind(this);
     this._dateFromChangeHandler = this._dateFromChangeHandler.bind(this);
     this._dateToChangeHandler = this._dateToChangeHandler.bind(this);
+    this._basePriceInputChangeHandler = this._basePriceInputChangeHandler.bind(this);
 
     this._setInnerHandlers();
     this._setDateFromPicker();
@@ -260,6 +261,10 @@ export default class EditForm extends SmartView {
     });
   }
 
+  _basePriceInputChangeHandler(evt) { //обработчик input ввода стоимости
+    this.updateData({basePrice: evt.target.value});
+  }
+
   restoreHandlers() { //восстанавливает все необходимые обработчики на новую форму редактирования
     this._setInnerHandlers();
     this._setDateFromPicker();
@@ -271,6 +276,7 @@ export default class EditForm extends SmartView {
   _setInnerHandlers() { //вешает "внутренние" обработчики на форму редактирования
     this.getElement().querySelector('.event__type-group').addEventListener('change', this._typeFieldsetChangeHandler); //вешает обработчик на fieldset выбора типа точки
     this.getElement().querySelector('.event__input--destination').addEventListener('change', this._destinationInputChangeHandler); //вешает обработчик на input ввода названия города
+    this.getElement().querySelector('.event__input--price').addEventListener('change', this._basePriceInputChangeHandler); //вешает обработчик на input ввода цены
   }
 
   _setDateFromPicker() { // устанавливает окно ввода даты старта
