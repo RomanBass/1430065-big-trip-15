@@ -31,15 +31,26 @@ export const getPictures = () => { // создание массива объек
 };
 
 export const getOffers = (type) => { // создание массива объектов опций
-  const offers = new Set();
+  const offers = [];
   possibleOffers[type].forEach((possibleOffer) => {
     const marker = getRandomInteger(0, 1);
     if (marker) {
-      offers.add(possibleOffer);
+      offers.push(possibleOffer);
     }
   });
   return offers;
 };
+
+// export const getOffers = (type) => { // создание массива объектов опций
+//   const offers = new Set();
+//   possibleOffers[type].forEach((possibleOffer) => {
+//     const marker = getRandomInteger(0, 1);
+//     if (marker) {
+//       offers.add(possibleOffer);
+//     }
+//   });
+//   return Array.from(offers);
+// };
 
 export const getDescription = () => { // создание описания соединением случайно выбираемых предложений из их массива
   let description = '';

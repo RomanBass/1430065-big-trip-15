@@ -213,11 +213,11 @@ export default class EditForm extends SmartView {
     this._dateFromChangeHandler = this._dateFromChangeHandler.bind(this);
     this._dateToChangeHandler = this._dateToChangeHandler.bind(this);
     this._basePriceInputChangeHandler = this._basePriceInputChangeHandler.bind(this);
+    this._offersChangeHandler = this._offersChangeHandler.bind(this);
 
     this._setInnerHandlers();
     this._setDateFromPicker();
     this._setDateToPicker();
-
   }
 
   getTemplate() {
@@ -265,6 +265,18 @@ export default class EditForm extends SmartView {
     this.updateData({basePrice: evt.target.value});
   }
 
+  _offersChangeHandler(evt) { //обработчик выбора опций
+    const clickedOptionTitle = evt.target.parentElement.querySelector('label span:first-child').textContent;
+    const clickedOptionPrice = evt.target.parentElement.querySelector('label span:last-child').textContent;
+    const ClickedOption = {title: clickedOptionTitle, price: parseInt(clickedOptionPrice, 10)};
+    //console.log(this._data.offers.includes(ClickedOption));
+    //this._data.offers.unshift(ClickedOption);
+    this._data.offers = this._data.offers.filter((option) => option.title !== ClickedOption.title);
+
+    this.updateData({offers: this._data.offers});
+
+  }
+
   restoreHandlers() { //восстанавливает все необходимые обработчики на новую форму редактирования
     this._setInnerHandlers();
     this._setDateFromPicker();
@@ -277,6 +289,7 @@ export default class EditForm extends SmartView {
     this.getElement().querySelector('.event__type-group').addEventListener('change', this._typeFieldsetChangeHandler); //вешает обработчик на fieldset выбора типа точки
     this.getElement().querySelector('.event__input--destination').addEventListener('change', this._destinationInputChangeHandler); //вешает обработчик на input ввода названия города
     this.getElement().querySelector('.event__input--price').addEventListener('change', this._basePriceInputChangeHandler); //вешает обработчик на input ввода цены
+    this.getElement().querySelector('.event__available-offers').addEventListener('change', this._offersChangeHandler); //вешает обработчик на опции
   }
 
   _setDateFromPicker() { // устанавливает окно ввода даты старта
