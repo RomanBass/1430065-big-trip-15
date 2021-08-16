@@ -41,7 +41,6 @@ export default class Filter extends AbstractView {
   }
 
   _sortTypeChangeHandler(evt) {
-    //evt.preventDefault();
     this._callback.sortTypeChange(evt.target.value);
   }
 
