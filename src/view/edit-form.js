@@ -262,19 +262,24 @@ export default class EditForm extends SmartView {
   }
 
   _basePriceInputChangeHandler(evt) { //обработчик input ввода стоимости
-    this.updateData({basePrice: evt.target.value});
+    this.updateData({basePrice: evt.target.value}); //обновляются данные точки в части стоимости
   }
 
   _offersChangeHandler(evt) { //обработчик выбора опций
-    const clickedOptionTitle = evt.target.parentElement.querySelector('label span:first-child').textContent;
-    const clickedOptionPrice = evt.target.parentElement.querySelector('label span:last-child').textContent;
-    const ClickedOption = {title: clickedOptionTitle, price: parseInt(clickedOptionPrice, 10)};
-    //console.log(this._data.offers.includes(ClickedOption));
-    //this._data.offers.unshift(ClickedOption);
-    this._data.offers = this._data.offers.filter((option) => option.title !== ClickedOption.title);
+    const clickedOptionTitle = evt.target.parentElement.querySelector('label span:first-child').textContent; //достаёт из разметки наименование кликУемой опции
+    const isClickedOption = this._data.offers.some((option) => option.title === clickedOptionTitle); //флаг проверки наличия кликнутой опции в массиве опций данной точки
 
-    this.updateData({offers: this._data.offers});
+    if (isClickedOption) {
+      this._data.offers = this._data.offers.filter((option) => option.title !== clickedOptionTitle); //кликнутая опция удаляется
+    } else {
+      const RADIX_10 = 10; // основание десятичной системы исчисления
+      const clickedOptionPrice = evt.target.parentElement.querySelector('label span:last-child').textContent; //достаёт из раметки цену кликуемой опции
+      const ClickedOption = {title: clickedOptionTitle, price: parseInt(clickedOptionPrice, RADIX_10)}; //создаёт объект кликнутой опции
 
+      this._data.offers.unshift(ClickedOption); //добавляет объект кликнутой опции в массив опций данной точки
+    }
+
+    this.updateData({offers: this._data.offers}); //обновляются данные точки в части опций
   }
 
   restoreHandlers() { //восстанавливает все необходимые обработчики на новую форму редактирования

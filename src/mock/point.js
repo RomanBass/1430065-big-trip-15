@@ -41,17 +41,6 @@ export const getOffers = (type) => { // создание массива объе
   return offers;
 };
 
-// export const getOffers = (type) => { // создание массива объектов опций
-//   const offers = new Set();
-//   possibleOffers[type].forEach((possibleOffer) => {
-//     const marker = getRandomInteger(0, 1);
-//     if (marker) {
-//       offers.add(possibleOffer);
-//     }
-//   });
-//   return Array.from(offers);
-// };
-
 export const getDescription = () => { // создание описания соединением случайно выбираемых предложений из их массива
   let description = '';
   let sentances = DESCRIPTION_SENTENCES;
