@@ -11,7 +11,7 @@ export default class Trip {
   constructor(tripContainer, pointsModel) {
     this._pointsModel = pointsModel;
     this._tripContainer = tripContainer;
-    this._sortingComponent = new SortingView();
+    this._sortingComponent = null;
     this._noPointComponent = new NoPointView();
     this._eventsListComponent = new EventsListView();
     this._pointPresenters = {};
@@ -97,8 +97,15 @@ export default class Trip {
   }
 
   _renderSort() {
-    render(this._tripContainer, this._sortingComponent, RenderPosition.AFTERBEGIN);
+
+    if (this._sortingComponent !== null) {
+      this._sortingComponent === null;
+    }
+
+    this._sortingComponent = new SortingView(this._currentSortType);
     this._sortingComponent.setSortTypeChangeHandler(this._handleSortTypeChange);
+
+    render(this._tripContainer, this._sortingComponent, RenderPosition.AFTERBEGIN);
   }
 
   _renderPoint(point) {
