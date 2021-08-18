@@ -83,6 +83,8 @@ export default class Trip {
         break;
       case UpdateType.MINOR:
         // обновить список
+        this._clearPointsList();
+        this._renderPoints();
         break;
       case UpdateType.MAJOR:
         //обновить всю доску

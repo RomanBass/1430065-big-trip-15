@@ -121,7 +121,7 @@ export default class Point {
   _handleEditFormSubmit(point) {
     this._changeData(
       UserAction.UPDATE_POINT,
-      UpdateType.PATCH,
+      UpdateType.MINOR,
       point,
     );
     this._replaceEditFormToPoint();
