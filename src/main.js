@@ -6,12 +6,15 @@ import { getRouteDates, getRoutePrice, getRouteName } from './utils/route.js';
 import {render, RenderPosition} from './utils/render.js';
 import TripPresenter from './presenter/trip.js';
 import PointsModel from './model/points.js';
+import FilterModel from './model/filter.js';
 
 const POINTS_COUNT = 4;
 const points = new Array(POINTS_COUNT).fill().map(generatePoint); // массив точек маршрута
 
 const pointsModel = new PointsModel();
 pointsModel.setPoints(points);
+
+const filterModel = new FilterModel();
 
 const siteHeaderElement = document.querySelector('.page-header'); // крупный блок
 const menuElement = siteHeaderElement.querySelector('.trip-controls__navigation'); // контейнеры...
