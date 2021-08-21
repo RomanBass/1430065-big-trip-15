@@ -24,5 +24,5 @@ if (points.length !== 0) { // элемент с информацией отри�
 
 const tripPresenter = new TripPresenter(tripEventsElement);
 tripPresenter.init(points);
-//
+
 export {points};
