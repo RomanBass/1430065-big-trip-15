@@ -75,3 +75,9 @@ export const FilterType = {
   FUTURE: 'future',
   PAST: 'past',
 };
+
+export const NoPointMessage = { //сообщения при отсутствии базовых или отфильтрованных точек
+  EVERYTHING: 'Click New Event to create your first point',
+  FUTURE: 'There are no future events now',
+  PAST: 'There are no past events now',
+};

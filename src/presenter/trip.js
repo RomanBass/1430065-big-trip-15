@@ -1,18 +1,20 @@
 import SortingView from '../view/sorting.js';
 import NoPointView from '../view/no-point.js';
 import EventsListView from '../view/events-list.js';
-import {render, RenderPosition} from '../utils/render.js';
+import {render, RenderPosition, remove} from '../utils/render.js';
 import PointPresenter from './point.js';
-import { SortType, UpdateType, UserAction } from '../utils/const.js';
+import { SortType, UpdateType, UserAction, NoPointMessage} from '../utils/const.js';
 import { sortByDateFrom, sortByPrice, sortByDuration } from '../utils/route.js';
 import EditForm from '../view/edit-form.js';
+import { filter } from '../utils/filter.js';
 
 export default class Trip {
-  constructor(tripContainer, pointsModel) {
+  constructor(tripContainer, pointsModel, filterModel) {
     this._pointsModel = pointsModel;
+    this._filterModel = filterModel;
     this._tripContainer = tripContainer;
     this._sortingComponent = null;
-    this._noPointComponent = new NoPointView();
+    this._noPointComponent = null;
     this._eventsListComponent = new EventsListView();
     this._pointPresenters = {};
     this._currentSortType = SortType.BY_DATE_FROM;
@@ -24,10 +26,12 @@ export default class Trip {
     this._handleModelEvent = this._handleModelEvent.bind(this);
 
     this._pointsModel.addObserver(this._handleModelEvent);
+    this._filterModel.addObserver(this._handleModelEvent);
   }
 
   init() {
     if (this._getPoints().length === 0) { // если точек нет, то отображается заглушка
+      this._noPointComponent = new NoPointView(NoPointMessage.EVERYTHING);
       this._renderNoPoints();
     } else {
       this._renderSort();
@@ -44,13 +48,17 @@ export default class Trip {
   }
 
   _getPoints() {
+    const filterType = this._filterModel.getFilter();
+    const points = this._pointsModel.getPoints();
+    const filteredPoints = filter[filterType](points);
+
     switch (this._currentSortType) {
       case SortType.BY_DATE_FROM:
-        return this._pointsModel.getPoints().slice().sort(sortByDateFrom);
+        return filteredPoints.sort(sortByDateFrom);
       case SortType.BY_PRICE:
-        return this._pointsModel.getPoints().slice().sort(sortByPrice);
+        return filteredPoints.sort(sortByPrice);
       case SortType.BY_DURATION:
-        return this._pointsModel.getPoints().slice().sort(sortByDuration);
+        return filteredPoints.sort(sortByDuration);
     }
   }
 
@@ -61,7 +69,6 @@ export default class Trip {
   }
 
   _handleViewAction(actionType, updateType, update) { //обрабатывает как отражается на модели действие на представлении
-    //console.log(actionType, updateType, update);
     switch (actionType) {
       case UserAction.UPDATE_POINT:
         this._pointsModel.updatePoint(updateType, update);
@@ -76,18 +83,18 @@ export default class Trip {
   }
 
   _handleModelEvent(updateType, data) { // обрабатывает как отражается на представлении изменение в модели
-    //console.log(updateType, data);
-    switch (updateType) {
+    switch (updateType) { //обновление точки
       case UpdateType.PATCH:
         this._pointPresenters[data.id].init(data);
         break;
-      case UpdateType.MINOR:
-        // обновить список
+      case UpdateType.MINOR: //обновление списка точек
         this._clearPointsList();
         this._renderPoints();
         break;
-      case UpdateType.MAJOR:
-        //обновить всю доску
+      case UpdateType.MAJOR: //обновление списка точек + перерисовка элемента фильтров
+        this._clearPointsList();
+        remove(this._sortingComponent);
+        this._renderNoPointMessage();
         break;
     }
   }
@@ -95,6 +102,35 @@ export default class Trip {
   _handleSortTypeChange(sortType) {
     this._currentSortType = sortType;
     this._clearPointsList();
+    this._renderPoints();
+  }
+
+  _renderNoPointMessage() {
+    if (this._noPointComponent !== null) {
+      remove(this._noPointComponent);
+    }
+
+    if (this._getPoints().length === 0 && this._filterModel.getFilter() === 'everything') {
+      this._noPointComponent = new NoPointView(NoPointMessage.EVERYTHING);
+      this._renderNoPoints();
+      return;
+    }
+
+    if (this._getPoints().length === 0 && this._filterModel.getFilter() === 'past') {
+      this._noPointComponent = new NoPointView(NoPointMessage.PAST);
+      this._renderNoPoints();
+      return;
+    }
+
+    if (this._getPoints().length === 0 && this._filterModel.getFilter() === 'future') {
+      this._noPointComponent = new NoPointView(NoPointMessage.FUTURE);
+      this._renderNoPoints();
+      return;
+    }
+
+
+    this._currentSortType = SortType.BY_DATE_FROM;
+    this._renderSort();
     this._renderPoints();
   }
 
