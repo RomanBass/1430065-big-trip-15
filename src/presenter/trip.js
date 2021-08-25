@@ -3,7 +3,7 @@ import NoPointView from '../view/no-point.js';
 import EventsListView from '../view/events-list.js';
 import {render, RenderPosition, remove} from '../utils/render.js';
 import PointPresenter from './point.js';
-import { SortType, UpdateType, UserAction, NoPointMessage} from '../utils/const.js';
+import { SortType, UpdateType, UserAction, FilterType} from '../utils/const.js';
 import { sortByDateFrom, sortByPrice, sortByDuration } from '../utils/route.js';
 import EditForm from '../view/edit-form.js';
 import { filter } from '../utils/filter.js';
@@ -19,6 +19,7 @@ export default class Trip {
     this._pointPresenters = {};
     this._currentSortType = SortType.BY_DATE_FROM;
     this._addFormComponent = new EditForm();
+    this._filterType = FilterType.All;
 
     this._handleModeChange = this._handleModeChange.bind(this);
     this._handleSortTypeChange = this._handleSortTypeChange.bind(this);
@@ -30,9 +31,8 @@ export default class Trip {
   }
 
   init() {
-    if (this._getPoints().length === 0) { // если точек нет, то отображается заглушка
-      this._noPointComponent = new NoPointView(NoPointMessage.EVERYTHING);
-      this._renderNoPoints();
+    if (!this._getPoints().length) { // если точек нет, то отображается заглушка
+      this._renderNoPoint();
     } else {
       this._renderSort();
       this._renderEventsList();
@@ -48,9 +48,9 @@ export default class Trip {
   }
 
   _getPoints() {
-    const filterType = this._filterModel.getFilter();
+    this._filterType = this._filterModel.getFilter();
     const points = this._pointsModel.getPoints();
-    const filteredPoints = filter[filterType](points);
+    const filteredPoints = filter[this._filterType](points);
 
     switch (this._currentSortType) {
       case SortType.BY_DATE_FROM:
@@ -94,7 +94,7 @@ export default class Trip {
       case UpdateType.MAJOR: //обновление списка точек + перерисовка элемента фильтров
         this._clearPointsList();
         remove(this._sortingComponent);
-        this._renderNoPointMessage();
+        this._renderNoPoint();
         break;
     }
   }
@@ -105,29 +105,16 @@ export default class Trip {
     this._renderPoints();
   }
 
-  _renderNoPointMessage() {
-    if (this._noPointComponent !== null) {
+  _renderNoPoint() {
+    if (this._noPointComponent) {
       remove(this._noPointComponent);
     }
 
-    if (this._getPoints().length === 0 && this._filterModel.getFilter() === 'everything') {
-      this._noPointComponent = new NoPointView(NoPointMessage.EVERYTHING);
-      this._renderNoPoints();
+    if (!this._getPoints().length) {
+      this._noPointComponent = new NoPointView(this._filterType);
+      render(this._tripContainer, this._noPointComponent, RenderPosition.BEFOREEND);
       return;
     }
-
-    if (this._getPoints().length === 0 && this._filterModel.getFilter() === 'past') {
-      this._noPointComponent = new NoPointView(NoPointMessage.PAST);
-      this._renderNoPoints();
-      return;
-    }
-
-    if (this._getPoints().length === 0 && this._filterModel.getFilter() === 'future') {
-      this._noPointComponent = new NoPointView(NoPointMessage.FUTURE);
-      this._renderNoPoints();
-      return;
-    }
-
 
     this._currentSortType = SortType.BY_DATE_FROM;
     this._renderSort();
@@ -136,7 +123,7 @@ export default class Trip {
 
   _renderSort() {
 
-    if (this._sortingComponent !== null) {
+    if (this._sortingComponent) {
       this._sortingComponent === null;
     }
 
@@ -155,10 +142,6 @@ export default class Trip {
   _renderPoints() {
     ////this._renderPoint(BlankPoint);
     this._getPoints().slice().forEach((point) => this._renderPoint(point));
-  }
-
-  _renderNoPoints() {
-    render(this._tripContainer, this._noPointComponent, RenderPosition.BEFOREEND);
   }
 
   _renderEventsList() {

@@ -1,6 +1,7 @@
 import AbstractView from './abstract.js';
-//const title = 'mmeessaaggee';
-const createNoPointTemplate = (message) => `<p class="trip-events__msg" style="color: #078ff0;">${message}</p>`;
+import { NoPointMessage } from '../utils/const.js';
+
+const createNoPointTemplate = (filterType) => `<p class="trip-events__msg" style="color: #078ff0;">${NoPointMessage[filterType]}</p>`;
 
 export default class NoPoint extends AbstractView {
   constructor(message) {

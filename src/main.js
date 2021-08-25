@@ -8,7 +8,7 @@ import PointsModel from './model/points.js';
 import FilterModel from './model/filter.js';
 import FilterPresenter from './presenter/filter.js';
 
-const POINTS_COUNT = 1;
+const POINTS_COUNT = 5;
 const points = new Array(POINTS_COUNT).fill().map(generatePoint); // массив точек маршрута
 
 const pointsModel = new PointsModel();
