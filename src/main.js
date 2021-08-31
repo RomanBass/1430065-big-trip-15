@@ -24,7 +24,7 @@ const tripEventsElement = document.querySelector('.trip-events');
 
 render(menuElement, new SiteMenuView(), RenderPosition.BEFOREEND); // отрисовки компонентов...
 
-if (points.length !== 0) { // элемент с информацией отрисовывается, только если в данных нет ни одной точки
+if (points.length) { // элемент с информацией отрисовывается, только если в данных нет ни одной точки
   render(tripElement, new InfoAndPriceView(getRoutePrice(points), getRouteDates(points), getRouteName(points)), RenderPosition.AFTERBEGIN);
 }
 
@@ -37,7 +37,6 @@ filterPresenter.init();
 document.querySelector('.trip-main__event-add-btn').addEventListener('click', (evt) => {
   evt.preventDefault();
   tripPresenter.createTask();
-  filterPresenter.init();
 });
 
 export {points};

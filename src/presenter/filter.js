@@ -1,14 +1,11 @@
 import FilterView from '../view/filter.js';
 import { render, RenderPosition, replace, remove } from '../utils/render.js';
-import { filter } from '../utils/filter.js';
 import { FilterType, UpdateType } from '../utils/const.js';
-import { points } from '../main.js';
 
 export default class Filter {
   constructor (filterContainer, filterModel) {
     this._filterContainer = filterContainer;
     this._filterModel = filterModel;
-    //this._pointsModel = pointsModel;
     this._currentFilterType = FilterType.EVERYTHING;
 
     this._filterComponent = null;
@@ -16,7 +13,6 @@ export default class Filter {
     this._handleModelEvent = this._handleModelEvent.bind(this);
     this._handleFilterTypeChange = this._handleFilterTypeChange.bind(this);
 
-    //this._pointsModel.addObserver(this._handleModelEvent);
     this._filterModel.addObserver(this._handleModelEvent);
   }
 

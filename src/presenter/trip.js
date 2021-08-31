@@ -5,7 +5,6 @@ import {render, RenderPosition, remove} from '../utils/render.js';
 import PointPresenter from './point.js';
 import { SortType, UpdateType, UserAction, FilterType} from '../utils/const.js';
 import { sortByDateFrom, sortByPrice, sortByDuration } from '../utils/route.js';
-import EditForm from '../view/edit-form.js';
 import { filter } from '../utils/filter.js';
 import PointNewPresenter from './point-new.js';
 
@@ -19,7 +18,6 @@ export default class Trip {
     this._eventsListComponent = new EventsListView();
     this._pointPresenters = {};
     this._currentSortType = SortType.BY_DATE_FROM;
-    //this._addFormComponent = new EditForm();
     this._filterType = FilterType.All;
 
     this._handleModeChange = this._handleModeChange.bind(this);
