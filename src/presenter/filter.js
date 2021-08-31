@@ -13,31 +13,32 @@ export default class Filter {
 
     this._filterComponent = null;
 
-    //this._handleModelEvent = this._handleModelEvent.bind(this);
+    this._handleModelEvent = this._handleModelEvent.bind(this);
     this._handleFilterTypeChange = this._handleFilterTypeChange.bind(this);
 
     //this._pointsModel.addObserver(this._handleModelEvent);
-    //this._filterModel.addObserver(this._handleModelEvent);
+    this._filterModel.addObserver(this._handleModelEvent);
   }
 
   init() {
-    this._renderFilter();
-  }
-
-  _renderFilter() {
-    if (this._filterComponent !== null) {
-      this._filterComponent === null;
-    }
+    const prevFilterComponent = this._filterComponent;
 
     this._filterComponent = new FilterView(this._currentFilterType);
     this._filterComponent.setFilterTypeChangeHandler(this._handleFilterTypeChange);
 
-    render(this._filterContainer, this._filterComponent, RenderPosition.BEFOREEND);
+    if (prevFilterComponent === null) {
+      render(this._filterContainer, this._filterComponent, RenderPosition.BEFOREEND);
+      return;
+    }
+
+    replace(this._filterComponent, prevFilterComponent);
+    remove(prevFilterComponent);
   }
 
-  // _handleModelEvent() {
-  //   //this.init();
-  // }
+  _handleModelEvent() {
+    //this._currentFilterType = FilterType.EVERYTHING;
+    //this.init();
+  }
 
   _handleFilterTypeChange(filterType) {
     if (this._filterModel.getFilter() === filterType) {

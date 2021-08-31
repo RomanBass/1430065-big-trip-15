@@ -29,9 +29,15 @@ if (points.length !== 0) { // элемент с информацией отри�
 }
 
 const tripPresenter = new TripPresenter(tripEventsElement, pointsModel, filterModel);
-const filterPresenter = new FilterPresenter(filtersElement, filterModel, pointsModel);
+const filterPresenter = new FilterPresenter(filtersElement, filterModel);
 
 tripPresenter.init();
 filterPresenter.init();
+
+document.querySelector('.trip-main__event-add-btn').addEventListener('click', (evt) => {
+  evt.preventDefault();
+  tripPresenter.createTask();
+  filterPresenter.init();
+});
 
 export {points};

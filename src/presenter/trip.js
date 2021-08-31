@@ -7,6 +7,7 @@ import { SortType, UpdateType, UserAction, FilterType} from '../utils/const.js';
 import { sortByDateFrom, sortByPrice, sortByDuration } from '../utils/route.js';
 import EditForm from '../view/edit-form.js';
 import { filter } from '../utils/filter.js';
+import PointNewPresenter from './point-new.js';
 
 export default class Trip {
   constructor(tripContainer, pointsModel, filterModel) {
@@ -18,7 +19,7 @@ export default class Trip {
     this._eventsListComponent = new EventsListView();
     this._pointPresenters = {};
     this._currentSortType = SortType.BY_DATE_FROM;
-    this._addFormComponent = new EditForm();
+    //this._addFormComponent = new EditForm();
     this._filterType = FilterType.All;
 
     this._handleModeChange = this._handleModeChange.bind(this);
@@ -28,6 +29,8 @@ export default class Trip {
 
     this._pointsModel.addObserver(this._handleModelEvent);
     this._filterModel.addObserver(this._handleModelEvent);
+
+    this._pointNewPresenter = new PointNewPresenter(this._eventsListComponent, this._handleViewAction);
   }
 
   init() {
@@ -40,7 +43,14 @@ export default class Trip {
     }
   }
 
+  createTask() {
+    this._currentSortType = SortType.BY_DATE_FROM;
+    this._filterModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING);
+    this._pointNewPresenter.init();
+  }
+
   _clearPointsList() { // удаляет все точки
+    this._pointNewPresenter.destroy;
     Object
       .values(this._pointPresenters)
       .forEach((presenter) => presenter.destroy());
@@ -63,6 +73,7 @@ export default class Trip {
   }
 
   _handleModeChange() {
+    this._pointNewPresenter.destroy();
     Object
       .values(this._pointPresenters)
       .forEach((presenter) => presenter.resetView());
