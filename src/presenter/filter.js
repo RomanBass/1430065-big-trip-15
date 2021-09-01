@@ -18,8 +18,7 @@ export default class Filter {
 
   init() {
     const prevFilterComponent = this._filterComponent;
-
-    this._filterComponent = new FilterView(this._currentFilterType);
+    this._filterComponent = new FilterView(this._filterModel.getFilter());
     this._filterComponent.setFilterTypeChangeHandler(this._handleFilterTypeChange);
 
     if (prevFilterComponent === null) {
@@ -32,14 +31,14 @@ export default class Filter {
   }
 
   _handleModelEvent() {
-    //this._currentFilterType = FilterType.EVERYTHING;
-    //this.init();
+    this.init();
   }
 
   _handleFilterTypeChange(filterType) {
     if (this._filterModel.getFilter() === filterType) {
       return;
     }
+
     this._filterModel.setFilter(UpdateType.MAJOR, filterType);
     this._currentFilterType = filterType;
   }

@@ -36,7 +36,7 @@ filterPresenter.init();
 
 document.querySelector('.trip-main__event-add-btn').addEventListener('click', (evt) => {
   evt.preventDefault();
-  tripPresenter.createTask();
+  tripPresenter.createPoint();
 });
 
 export {points};

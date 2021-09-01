@@ -41,7 +41,7 @@ export default class Trip {
     }
   }
 
-  createTask() {
+  createPoint() {
     this._currentSortType = SortType.BY_DATE_FROM;
     this._filterModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING);
     this._pointNewPresenter.init();
@@ -149,7 +149,6 @@ export default class Trip {
   }
 
   _renderPoints() {
-    ////this._renderPoint(BlankPoint);
     this._getPoints().slice().forEach((point) => this._renderPoint(point));
   }
 
