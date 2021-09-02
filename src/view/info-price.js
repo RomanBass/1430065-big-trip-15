@@ -1,4 +1,5 @@
-import AbstractView from './abstract.js';
+//import AbstractView from './abstract.js';
+import SmartView from './smart.js';
 
 const createInfoAndPriceTemplate = (price, date, name) => (
   `<section class="trip-main__trip-info  trip-info">
@@ -12,7 +13,7 @@ const createInfoAndPriceTemplate = (price, date, name) => (
 </section>`
 );
 
-export default class InfoAndPrice extends AbstractView {
+export default class InfoAndPrice extends SmartView {
   constructor(price, date, name) {
     super();
     this._price = price;
@@ -23,5 +24,8 @@ export default class InfoAndPrice extends AbstractView {
 
   getTemplate() {
     return createInfoAndPriceTemplate(this._price, this._date, this._name);
+  }
+
+  restoreHandlers() {
   }
 }

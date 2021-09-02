@@ -8,6 +8,8 @@ import flatpickr from 'flatpickr';
 import '../../node_modules/flatpickr/dist/flatpickr.min.css';
 import dayjs from 'dayjs';
 
+const RADIX_10 = 10; // основание десятичной системы исчисления
+
 const createDataListTemplate = (cityName) => `<option value="${cityName}"></option>`;//возвращает образец ДОМ элемента в datalist наименований городов
 
 const createOptionTemplate = (offer, isChecked) => { //возвращает образец ДОМ элемента опции
@@ -21,8 +23,6 @@ const createOptionTemplate = (offer, isChecked) => { //возвращает об
   </label>
 </div>`;
 };
-
-const RADIX_10 = 10; // основание десятичной системы исчисления
 
 const createPhotoTemplate = (picture) => `<img class="event__photo" src="${picture.src}" alt="${picture.description}">`;  //возвращает образец ДОМ элемента фотографии
 
