@@ -4,6 +4,7 @@ export default class Points extends Observer {
   constructor() {
     super();
     this._points = [];
+    this._offers = [];
   }
 
   setPoints(points) {
@@ -12,6 +13,14 @@ export default class Points extends Observer {
 
   getPoints() {
     return this._points;
+  }
+
+  setOffers(offers) {
+    this._offers = offers;
+  }
+
+  getOffers() {
+    return this._offers;
   }
 
   updatePoint(updateType, update) {

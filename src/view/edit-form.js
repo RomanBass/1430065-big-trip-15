@@ -22,6 +22,8 @@ const createOptionTemplate = (offer, isChecked) => { //возвращает об
 </div>`;
 };
 
+const RADIX_10 = 10; // основание десятичной системы исчисления
+
 const createPhotoTemplate = (picture) => `<img class="event__photo" src="${picture.src}" alt="${picture.description}">`;  //возвращает образец ДОМ элемента фотографии
 
 const createEditFormTemplate = (point = BlankPoint) => {
@@ -48,6 +50,7 @@ const createEditFormTemplate = (point = BlankPoint) => {
       offers.forEach((offer) => { //чекает те опции, которые имеются в моках точки
         if (option.title === offer.title) {
           isChecked = 'checked';
+          offer.price = option.price; // чтобы передать цену в опции BlankPoint
         }
       });
       OptionsTemplate += createOptionTemplate(option, isChecked);
@@ -262,7 +265,7 @@ export default class EditForm extends SmartView {
   }
 
   _basePriceInputChangeHandler(evt) { //обработчик input ввода стоимости
-    this.updateData({basePrice: evt.target.value}); //обновляются данные точки в части стоимости
+    this.updateData({basePrice: parseInt(evt.target.value, RADIX_10)}); //обновляются данные точки в части стоимости
   }
 
   _offersChangeHandler(evt) { //обработчик выбора опций
@@ -272,7 +275,6 @@ export default class EditForm extends SmartView {
     if (isClickedOption) {
       this._data.offers = this._data.offers.filter((option) => option.title !== clickedOptionTitle); //кликнутая опция удаляется
     } else {
-      const RADIX_10 = 10; // основание десятичной системы исчисления
       const clickedOptionPrice = evt.target.parentElement.querySelector('label span:last-child').textContent; //достаёт из раметки цену кликуемой опции
       const ClickedOption = {title: clickedOptionTitle, price: parseInt(clickedOptionPrice, RADIX_10)}; //создаёт объект кликнутой опции
 

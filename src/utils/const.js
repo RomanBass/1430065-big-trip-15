@@ -32,7 +32,7 @@ export const DESCRIPTION_SENTENCES = [
   'In rutrum ac purus sit amet tempus.'];
 
 export const AddFormData = { // данные для дефолтной точки
-  BASE_PRICE: 150,
+  BASE_PRICE: 100,
   TRIP_DURATION: 3,
   DESTINATION: {description: '', name: '', pictures: []},
   ID: nanoid(),
