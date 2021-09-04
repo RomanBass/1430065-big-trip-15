@@ -43,5 +43,5 @@ document.querySelector('.trip-main__event-add-btn').addEventListener('click', (e
   evt.preventDefault();
   tripPresenter.createPoint();
 });
-
+//
 export {points};
