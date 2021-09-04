@@ -39,7 +39,7 @@ const createEditFormTemplate = (point = BlankPoint) => {
   };
 
   let isOffer = ''; // переменная скрывает блок с опциями, если опции отсутствуют для этой точки
-  if (possibleOffers[type].length === 0){
+  if (!possibleOffers[type].length){
     isOffer = 'visually-hidden';
   }
 
@@ -67,12 +67,12 @@ const createEditFormTemplate = (point = BlankPoint) => {
   };
 
   let isPicture = ''; //переменная скрывает блок фотографий со скролом, если фотографии отсутствуют в данных точки
-  if (pictures.length === 0) {
+  if (!pictures.length) {
     isPicture = 'visually-hidden';
   }
 
   let isDestinationInfo = ''; //переменная скрывает блок информации о пункте назначения, если для него отсутствует описание и фотографии
-  if (pictures.length === 0 && description === '') {
+  if (!pictures.length && description === '') {
     isDestinationInfo = 'visually-hidden';
   }
 

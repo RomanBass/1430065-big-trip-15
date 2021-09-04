@@ -2,7 +2,7 @@ import SiteMenuView from './view/site-menu.js';
 import InfoAndPriceView from './view/info-price.js';
 import {generatePoint} from './mock/point.js';
 import { getRouteDates, getRoutePrice, getRouteName } from './utils/route.js';
-import {render, RenderPosition, replace} from './utils/render.js';
+import {render, RenderPosition} from './utils/render.js';
 import TripPresenter from './presenter/trip.js';
 import PointsModel from './model/points.js';
 import FilterModel from './model/filter.js';
@@ -24,17 +24,12 @@ const tripEventsElement = document.querySelector('.trip-events');
 
 render(menuElement, new SiteMenuView(), RenderPosition.BEFOREEND); // отрисовки компонентов...
 
-if (points.length) { // элемент с информацией отрисовывается, только если в данных есть точки
-  let tripInfo = new InfoAndPriceView(getRoutePrice(points), getRouteDates(points), getRouteName(points));
+if (pointsModel.getPoints().length) { // элемент с информацией отрисовывается, только если в данных есть точки
+  const tripInfo = new InfoAndPriceView(getRoutePrice(pointsModel.getPoints()), getRouteDates(pointsModel.getPoints()), getRouteName(pointsModel.getPoints()));
 
   render(tripElement, tripInfo, RenderPosition.AFTERBEGIN);
   pointsModel.addObserver(() => {
-    const pointsArray = pointsModel.getPoints();
-    const newTripInfo = new InfoAndPriceView(getRoutePrice(pointsArray), getRouteDates(pointsArray), getRouteName(pointsArray));
-
-    replace(newTripInfo, tripInfo);
-    tripInfo = newTripInfo;
-    //tripInfo.updateElement();
+    tripInfo.updateData({tripPrice: getRoutePrice(pointsModel.getPoints()), tripDate: getRouteDates(pointsModel.getPoints()), tripName: getRouteName(pointsModel.getPoints())});
   });
 }
 
