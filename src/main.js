@@ -34,7 +34,7 @@ if (pointsModel.getPoints().length) { // элемент с информацие�
 }
 
 const tripPresenter = new TripPresenter(tripEventsElement, pointsModel, filterModel);
-const filterPresenter = new FilterPresenter(filtersElement, filterModel);
+const filterPresenter = new FilterPresenter(filtersElement, filterModel, pointsModel);
 
 tripPresenter.init();
 filterPresenter.init();

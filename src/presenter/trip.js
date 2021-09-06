@@ -44,7 +44,14 @@ export default class Trip {
   createPoint() {
     this._currentSortType = SortType.BY_DATE_FROM;
     this._filterModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING);
+
+    if (!this._tripContainer.contains(this._eventsListComponent.getElement())) {
+      this._renderEventsList();
+    }
+
     this._pointNewPresenter.init();
+
+    remove(this._noPointComponent);
   }
 
   _clearPointsList() { // удаляет все точки
@@ -103,7 +110,15 @@ export default class Trip {
       case UpdateType.MAJOR: //обновление списка точек + перерисовка элемента фильтров
         this._clearPointsList();
         remove(this._sortingComponent);
-        this._renderNoPoint();
+        remove(this._noPointComponent); // чтобы удалялаяь надпись отсутствия точек при фильтрации в случае массива из одной точки
+
+        if (!this._getPoints().length) {
+          this._renderNoPoint();
+        } else {
+          this._currentSortType = SortType.BY_DATE_FROM;
+          this._renderSort();
+          this._renderPoints();
+        }
         break;
     }
   }
@@ -122,12 +137,11 @@ export default class Trip {
     if (!this._getPoints().length) {
       this._noPointComponent = new NoPointView(this._filterType);
       render(this._tripContainer, this._noPointComponent, RenderPosition.BEFOREEND);
-      return;
     }
 
-    this._currentSortType = SortType.BY_DATE_FROM;
-    this._renderSort();
-    this._renderPoints();
+    // this._currentSortType = SortType.BY_DATE_FROM;
+    // this._renderSort();
+    // this._renderPoints();
   }
 
   _renderSort() {
