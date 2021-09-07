@@ -3,9 +3,11 @@ import dayjs from 'dayjs';
 export const sortByDateFrom = (pointOne, pointTwo) => dayjs(pointOne.dateFrom).diff(dayjs(pointTwo.dateFrom));
 
 export const sortByPrice = (pointOne, pointTwo) => {
+
   if (pointTwo.basePrice === pointOne.basePrice) { // если у точек одинаковая цена, то они сортируются по дате-времени начала
     return dayjs(pointOne.dateFrom).diff(dayjs(pointTwo.dateFrom));
   }
+
   return pointTwo.basePrice - pointOne.basePrice;
 };
 
@@ -16,24 +18,38 @@ export const sortByDuration = (pointOne, pointTwo) => {
 };
 
 export const getRouteName = (points) => { // вернуть имя маршрута
-  const pointsByDateFrom = points.slice().sort(sortByDateFrom);
-  let routeName = `${pointsByDateFrom[0].destination.name} ... ${pointsByDateFrom[pointsByDateFrom.length - 1].destination.name}` ;
-  if (pointsByDateFrom.length === 3) {
-    routeName = `${pointsByDateFrom[0].destination.name} &mdash; ${pointsByDateFrom[1].destination.name}  &mdash; ${pointsByDateFrom[2].destination.name}`;
-  } else if (pointsByDateFrom.length === 2) {
-    routeName = `${pointsByDateFrom[0].destination.name} &mdash; ${pointsByDateFrom[1].destination.name}`;
-  } else if (pointsByDateFrom.length === 1) {
-    routeName = `${pointsByDateFrom[0].destination.name}`;
+  let routeName = 'Route Info';
+
+  if (points.length) {
+    const pointsByDateFrom = points.slice().sort(sortByDateFrom);
+    routeName = `${pointsByDateFrom[0].destination.name} ... ${pointsByDateFrom[pointsByDateFrom.length - 1].destination.name}` ;
+
+    if (pointsByDateFrom.length === 3) {
+      routeName = `${pointsByDateFrom[0].destination.name} &mdash; ${pointsByDateFrom[1].destination.name}  &mdash; ${pointsByDateFrom[2].destination.name}`;
+    } else if (pointsByDateFrom.length === 2) {
+      routeName = `${pointsByDateFrom[0].destination.name} &mdash; ${pointsByDateFrom[1].destination.name}`;
+    } else if (pointsByDateFrom.length === 1) {
+      routeName = `${pointsByDateFrom[0].destination.name}`;
+    }
+
   }
+
   return routeName;
 };
 
 export const getRouteDates = (points) => { // вернуть время маршрута
-  const pointsByDateFrom = points.slice().sort(sortByDateFrom);
-  let routeDates = `${pointsByDateFrom[0].dateFrom.format('MMM DD')} &nbsp;&mdash;&nbsp ${pointsByDateFrom[pointsByDateFrom.length - 1].dateTo.format('MMM DD')}`;
-  if (pointsByDateFrom[0].dateFrom.format('MMM') === pointsByDateFrom[pointsByDateFrom.length - 1].dateTo.format('MMM')) {
-    routeDates = `${pointsByDateFrom[0].dateFrom.format('MMM DD')} &nbsp;&mdash;&nbsp ${pointsByDateFrom[pointsByDateFrom.length - 1].dateTo.format('DD')}`;
+  let routeDates = 'Dates Info';
+
+  if (points.length) {
+    const pointsByDateFrom = points.slice().sort(sortByDateFrom);
+    routeDates = `${pointsByDateFrom[0].dateFrom.format('MMM DD')} &nbsp;&mdash;&nbsp ${pointsByDateFrom[pointsByDateFrom.length - 1].dateTo.format('MMM DD')}`;
+
+    if (pointsByDateFrom[0].dateFrom.format('MMM') === pointsByDateFrom[pointsByDateFrom.length - 1].dateTo.format('MMM')) {
+      routeDates = `${pointsByDateFrom[0].dateFrom.format('MMM DD')} &nbsp;&mdash;&nbsp ${pointsByDateFrom[pointsByDateFrom.length - 1].dateTo.format('DD')}`;
+    }
+
   }
+
   return routeDates;
 };
 

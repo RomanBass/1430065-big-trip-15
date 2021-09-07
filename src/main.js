@@ -24,14 +24,12 @@ const tripEventsElement = document.querySelector('.trip-events');
 
 render(menuElement, new SiteMenuView(), RenderPosition.BEFOREEND); // отрисовки компонентов...
 
-if (pointsModel.getPoints().length) { // элемент с информацией отрисовывается, только если в данных есть точки
-  const tripInfo = new InfoAndPriceView(getRoutePrice(pointsModel.getPoints()), getRouteDates(pointsModel.getPoints()), getRouteName(pointsModel.getPoints()));
+const tripInfo = new InfoAndPriceView(getRoutePrice(pointsModel.getPoints()), getRouteDates(pointsModel.getPoints()), getRouteName(pointsModel.getPoints()));
 
-  render(tripElement, tripInfo, RenderPosition.AFTERBEGIN);
-  pointsModel.addObserver(() => {
-    tripInfo.updateData({tripPrice: getRoutePrice(pointsModel.getPoints()), tripDate: getRouteDates(pointsModel.getPoints()), tripName: getRouteName(pointsModel.getPoints())});
-  });
-}
+render(tripElement, tripInfo, RenderPosition.AFTERBEGIN);
+pointsModel.addObserver(() => {
+  tripInfo.updateData({tripPrice: getRoutePrice(pointsModel.getPoints()), tripDate: getRouteDates(pointsModel.getPoints()), tripName: getRouteName(pointsModel.getPoints())});
+});
 
 const tripPresenter = new TripPresenter(tripEventsElement, pointsModel, filterModel);
 const filterPresenter = new FilterPresenter(filtersElement, filterModel, pointsModel);

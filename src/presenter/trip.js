@@ -139,9 +139,6 @@ export default class Trip {
       render(this._tripContainer, this._noPointComponent, RenderPosition.BEFOREEND);
     }
 
-    // this._currentSortType = SortType.BY_DATE_FROM;
-    // this._renderSort();
-    // this._renderPoints();
   }
 
   _renderSort() {
