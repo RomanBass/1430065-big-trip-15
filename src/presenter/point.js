@@ -40,12 +40,6 @@ export default class Point {
     this._editFormComponent.setEditFormSubmitButtonClickHandler(this._handleEditFormSubmit);
     this._pointComponent.setFavoriteButtonClickHandler(this._handleFavoriteButtonClick);
 
-    // if ((prevPointComponent === null || prevEditFormComponent === null) && this._point.id == BlankPoint.id) { // если это форма добавления, то отрисовывается в виде редактирования
-    //   render(this._eventListContainer, this._editFormComponent, RenderPosition.BEFOREEND);
-    //   this._mode = Mode.EDITING;
-    //   return;
-    // }
-
     if (this._point.id === BlankPoint.id) { // чтобы не отрисовывалась точка по данным формы добавления
       return;
     }

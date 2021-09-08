@@ -12,13 +12,13 @@ export default class PointNew {
     this._handleEditFormSubmit = this._handleEditFormSubmit.bind(this);
   }
 
-  init() {
+  init(point, offers) {
 
     if (this._editFormComponent !== null) { // чтобы не отрисовывалось две формы добавления
       return;
     }
 
-    this._editFormComponent = new EditFormView();
+    this._editFormComponent = new EditFormView(point, offers);
 
     this._editFormComponent.setEditFormSubmitButtonClickHandler(this._handleEditFormSubmit);
 

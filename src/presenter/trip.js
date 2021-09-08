@@ -7,6 +7,7 @@ import { SortType, UpdateType, UserAction, FilterType} from '../utils/const.js';
 import { sortByDateFrom, sortByPrice, sortByDuration } from '../utils/route.js';
 import { filter } from '../utils/filter.js';
 import PointNewPresenter from './point-new.js';
+import { BlankPoint } from '../utils/const.js';
 
 export default class Trip {
   constructor(tripContainer, pointsModel, filterModel) {
@@ -49,7 +50,7 @@ export default class Trip {
       this._renderEventsList();
     }
 
-    this._pointNewPresenter.init();
+    this._pointNewPresenter.init(BlankPoint, this._pointsModel.getOffers());
 
     remove(this._noPointComponent);
   }

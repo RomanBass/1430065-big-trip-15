@@ -9,7 +9,7 @@ import FilterModel from './model/filter.js';
 import FilterPresenter from './presenter/filter.js';
 import { possibleOffers } from './mock/point.js';
 
-const POINTS_COUNT = 4;
+const POINTS_COUNT = 2;
 const points = new Array(POINTS_COUNT).fill().map(generatePoint); // массив точек маршрута
 
 const pointsModel = new PointsModel();

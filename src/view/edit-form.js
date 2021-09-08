@@ -47,12 +47,15 @@ const createEditFormTemplate = (point = BlankPoint, possibleOffers) => {
     let OptionsTemplate = '';
     possibleOffersCollection[type].forEach((option) => {
       let isChecked = '';
-      offers.forEach((offer) => { //чекает те опции, которые имеются в моках точки
+      offers.find((offer) => { // если находит среди офферов первое совпадающее по тайтлу с опцией, то делает этот оффер чекнутым
+
         if (option.title === offer.title) {
           isChecked = 'checked';
           offer.price = option.price; // чтобы передать цену в опции BlankPoint
         }
+
       });
+
       OptionsTemplate += createOptionTemplate(option, isChecked);
     });
     return OptionsTemplate;
