@@ -1,4 +1,4 @@
-import {getOffers, possibleOffers} from '../mock/point.js';
+import {getOffers} from '../mock/point.js';
 import {points} from '../main.js';
 import {getCitiesUniqueNames} from '../utils/route.js';
 import { BlankPoint } from '../utils/const.js';
@@ -26,7 +26,7 @@ const createOptionTemplate = (offer, isChecked) => { //возвращает об
 
 const createPhotoTemplate = (picture) => `<img class="event__photo" src="${picture.src}" alt="${picture.description}">`;  //возвращает образец ДОМ элемента фотографии
 
-const createEditFormTemplate = (point = BlankPoint) => {
+const createEditFormTemplate = (point = BlankPoint, possibleOffers) => {
   const {destination, basePrice, type, dateFrom, dateTo, offers} = point;
   const {description, name, pictures} = destination;
 
@@ -203,11 +203,12 @@ const createEditFormTemplate = (point = BlankPoint) => {
 };
 
 export default class EditForm extends SmartView {
-  constructor(point = BlankPoint) {
+  constructor(point = BlankPoint, possibleOffers) {
     super();
     this._data = point; // this._point заменён на this._data чтобы отнаследоваться от SmartView
     this._dateFromPicker = null;
     this._dateToPicker = null;
+    this._offers = possibleOffers;
 
     this._editFormRollupButtonClickHandler = this._editFormRollupButtonClickHandler.bind(this);
     this._editFormSubmitButtonClickHandler = this._editFormSubmitButtonClickHandler.bind(this);
@@ -224,7 +225,7 @@ export default class EditForm extends SmartView {
   }
 
   getTemplate() {
-    return createEditFormTemplate(this._data);
+    return createEditFormTemplate(this._data, this._offers);
   }
 
   _editFormRollupButtonClickHandler(evt) {

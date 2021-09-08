@@ -7,12 +7,14 @@ import TripPresenter from './presenter/trip.js';
 import PointsModel from './model/points.js';
 import FilterModel from './model/filter.js';
 import FilterPresenter from './presenter/filter.js';
+import { possibleOffers } from './mock/point.js';
 
-const POINTS_COUNT = 0;
+const POINTS_COUNT = 4;
 const points = new Array(POINTS_COUNT).fill().map(generatePoint); // массив точек маршрута
 
 const pointsModel = new PointsModel();
 pointsModel.setPoints(points);
+pointsModel.setOffers(possibleOffers);
 
 const filterModel = new FilterModel();
 

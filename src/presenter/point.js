@@ -25,14 +25,15 @@ export default class Point {
     this._escKeyDownHandler = this._escKeyDownHandler.bind(this);
   }
 
-  init(point) {
+  init(point, offers) {
     this._point = point;
+    this._offers = offers;
 
     const prevPointComponent = this._pointComponent;
     const prevEditFormComponent = this._editFormComponent;
 
     this._pointComponent = new PointView(point);
-    this._editFormComponent = new EditFormView(point);
+    this._editFormComponent = new EditFormView(point, offers);
 
     this._pointComponent.setPointRollupButtonClickHandler(this._handlePointToEditFormClick);
     this._editFormComponent.setEditFormRollupButtonClickHandler(this._handleEditFormToPointClick);
