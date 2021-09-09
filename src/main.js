@@ -9,7 +9,7 @@ import FilterModel from './model/filter.js';
 import FilterPresenter from './presenter/filter.js';
 import { possibleOffers } from './mock/point.js';
 
-const POINTS_COUNT = 2;
+const POINTS_COUNT = 5;
 const points = new Array(POINTS_COUNT).fill().map(generatePoint); // массив точек маршрута
 
 const pointsModel = new PointsModel();
@@ -43,5 +43,5 @@ document.querySelector('.trip-main__event-add-btn').addEventListener('click', (e
   evt.preventDefault();
   tripPresenter.createPoint();
 });
-//
+
 export {points};

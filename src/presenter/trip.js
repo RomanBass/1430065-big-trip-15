@@ -19,7 +19,7 @@ export default class Trip {
     this._eventsListComponent = new EventsListView();
     this._pointPresenters = {};
     this._currentSortType = SortType.BY_DATE_FROM;
-    this._filterType = FilterType.All;
+    this._filterType = FilterType.EVERYTHING;
 
     this._handleModeChange = this._handleModeChange.bind(this);
     this._handleSortTypeChange = this._handleSortTypeChange.bind(this);
