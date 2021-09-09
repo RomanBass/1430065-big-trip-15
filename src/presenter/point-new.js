@@ -23,14 +23,16 @@ export default class PointNew {
 
     this._editFormComponent.setEditFormSubmitButtonClickHandler(this._handleEditFormSubmit);
     this._editFormComponent.setAddFormCancelHandler(this._handleAddFormCancel);
+    this._escKeyDownHandler = this._escKeyDownHandler.bind(this);
 
     render(this._eventListContainer, this._editFormComponent, RenderPosition.AFTERBEGIN);
-
+    document.addEventListener('keydown', this._escKeyDownHandler);
   }
 
   destroy() {
     remove(this._editFormComponent);
     this._editFormComponent = null;
+    document.removeEventListener('keydown', this._escKeyDownHandler);
   }
 
   _handleEditFormSubmit(point) {
@@ -44,6 +46,13 @@ export default class PointNew {
 
   _handleAddFormCancel() { // обработчик на кнопку Cancel для удаления формы добавления
     this.destroy();
+  }
+
+  _escKeyDownHandler(evt) {
+    if (evt.key === 'Escape' || evt.key === 'Esc') {
+      evt.preventDefault();
+      this.destroy();
+    }
   }
 
 }
