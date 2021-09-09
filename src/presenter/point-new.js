@@ -10,6 +10,7 @@ export default class PointNew {
     this._changeData = changeData;
 
     this._handleEditFormSubmit = this._handleEditFormSubmit.bind(this);
+    this._handleAddFormCancel = this._handleAddFormCancel.bind(this);
   }
 
   init(point, offers) {
@@ -21,6 +22,7 @@ export default class PointNew {
     this._editFormComponent = new EditFormView(point, offers);
 
     this._editFormComponent.setEditFormSubmitButtonClickHandler(this._handleEditFormSubmit);
+    this._editFormComponent.setAddFormCancelHandler(this._handleAddFormCancel);
 
     render(this._eventListContainer, this._editFormComponent, RenderPosition.AFTERBEGIN);
 
@@ -37,6 +39,10 @@ export default class PointNew {
       UpdateType.MAJOR,
       Object.assign({}, point, {id: nanoid()}),
     );
+    this.destroy();
+  }
+
+  _handleAddFormCancel() { // обработчик на кнопку Cancel для удаления формы добавления
     this.destroy();
   }
 

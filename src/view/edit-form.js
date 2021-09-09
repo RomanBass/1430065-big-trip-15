@@ -222,6 +222,7 @@ export default class EditForm extends SmartView {
     this._basePriceInputChangeHandler = this._basePriceInputChangeHandler.bind(this);
     this._offersChangeHandler = this._offersChangeHandler.bind(this);
     this._deletePointClickHandler = this._deletePointClickHandler.bind(this);
+    this._addFormCancelHandler = this._addFormCancelHandler.bind(this);
 
     this._setInnerHandlers();
     this._setDateFromPicker();
@@ -264,6 +265,16 @@ export default class EditForm extends SmartView {
   setDeletePointClickHandler(callback) {
     this._callback.deletePointClickHandler = callback;
     this.getElement().querySelector('.event__reset-btn').addEventListener('click', this._deletePointClickHandler);
+  }
+
+  _addFormCancelHandler(evt) { // добавляет обработчик на кнопку Cancel для удаления формы добавления
+    evt.preventDefault();
+    this._callback.addFormCancelHandler();
+  }
+
+  setAddFormCancelHandler(callback) {
+    this._callback.addFormCancelHandler = callback;
+    this.getElement().querySelector('.event__reset-btn').addEventListener('click', this._addFormCancelHandler);
   }
 
   _typeFieldsetChangeHandler(evt) { //обработчик fieldset по изменению типа точки

@@ -28,7 +28,6 @@ export default class Point {
 
   init(point, offers) {
     this._point = point;
-    this._offers = offers;
 
     const prevPointComponent = this._pointComponent;
     const prevEditFormComponent = this._editFormComponent;
