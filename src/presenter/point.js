@@ -22,6 +22,7 @@ export default class Point {
     this._handleEditFormToPointClick = this._handleEditFormToPointClick.bind(this);
     this._handleFavoriteButtonClick = this._handleFavoriteButtonClick.bind(this);
     this._handleEditFormSubmit = this._handleEditFormSubmit.bind(this);
+    this._handleDeletePoint = this._handleDeletePoint.bind(this);
     this._escKeyDownHandler = this._escKeyDownHandler.bind(this);
   }
 
@@ -38,6 +39,7 @@ export default class Point {
     this._pointComponent.setPointRollupButtonClickHandler(this._handlePointToEditFormClick);
     this._editFormComponent.setEditFormRollupButtonClickHandler(this._handleEditFormToPointClick);
     this._editFormComponent.setEditFormSubmitButtonClickHandler(this._handleEditFormSubmit);
+    this._editFormComponent.setDeletePointClickHandler(this._handleDeletePoint);
     this._pointComponent.setFavoriteButtonClickHandler(this._handleFavoriteButtonClick);
 
     if (this._point.id === BlankPoint.id) { // чтобы не отрисовывалась точка по данным формы добавления
@@ -122,4 +124,11 @@ export default class Point {
     this._replaceEditFormToPoint();
   }
 
+  _handleDeletePoint(point) {
+    this._changeData(
+      UserAction.DELETE_POINT,
+      UpdateType.MAJOR,
+      point,
+    );
+  }
 }
