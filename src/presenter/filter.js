@@ -26,7 +26,7 @@ export default class Filter {
       EVERYTHING: (this._pointsModel.getPoints()).length > null,
       FUTURE: filter[FilterType.FUTURE](this._pointsModel.getPoints()).length > null,
       PAST: filter[FilterType.PAST](this._pointsModel.getPoints()).length > null,
-    }
+    };
 
     this._filterComponent = new FilterView(this._filterModel.getFilter(), AreFiltersAvailable);
     this._filterComponent.setFilterTypeChangeHandler(this._handleFilterTypeChange);
