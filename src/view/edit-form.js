@@ -212,6 +212,7 @@ export default class EditForm extends SmartView {
     this._dateFromPicker = null;
     this._dateToPicker = null;
     this._offers = possibleOffers;
+    this._citiesNames = getCitiesUniqueNames(points);
 
     this._editFormRollupButtonClickHandler = this._editFormRollupButtonClickHandler.bind(this);
     this._editFormSubmitButtonClickHandler = this._editFormSubmitButtonClickHandler.bind(this);
@@ -285,9 +286,28 @@ export default class EditForm extends SmartView {
   }
 
   _destinationInputChangeHandler(evt) { //обработчик input ввода названия города
-    this.updateData({
-      destination: {description: getDescription(), name: evt.target.value, pictures: getPictures()},
-    });
+
+    let isCity = false; // флаг, что введённый город присутствует в datalist
+
+    const changeCity = (cityName) => { // обновляет название города, только если он есть в datalist
+
+      if (cityName === evt.target.value) {
+        isCity = true;
+        this.updateData({
+          destination: {description: getDescription(), name: evt.target.value, pictures: getPictures()},
+        });
+      }
+
+      return cityName === evt.target.value;
+    };
+
+    this._citiesNames.find(changeCity); // вызывает функцию changeCity только если название введённого города имеется в datalist
+
+    if (!isCity) { // если введёный город отсутствует, то выдаётся соответствующее сообщение setCustomValidity
+      this.getElement().querySelector('.event__input--destination').setCustomValidity('This city is not available, please select one in the popup list.');
+      this.getElement().querySelector('.event__input--destination').reportValidity();
+    }
+
   }
 
   _basePriceInputChangeHandler(evt) { //обработчик input ввода стоимости

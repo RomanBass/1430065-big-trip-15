@@ -34,7 +34,7 @@ export const DESCRIPTION_SENTENCES = [
 export const AddFormData = { // данные для дефолтной точки
   BASE_PRICE: 100,
   TRIP_DURATION: 3,
-  DESTINATION: {description: '', name: '', pictures: []},
+  DESTINATION: {description: '', name: CITIES[0], pictures: []},
   ID: nanoid(),
   IS_FAVORITE: false,
   OFFERS: [{title: 'Taxi-Option-2'}, {title: 'Taxi-Option-5'}],
