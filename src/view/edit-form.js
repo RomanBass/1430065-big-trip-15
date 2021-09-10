@@ -46,15 +46,19 @@ const createEditFormTemplate = (point = BlankPoint, possibleOffers) => {
   const getOptionsTemplate = (possibleOffersCollection) =>  { //возвращает ДОМ элемент возможных опции для точки типа type
     let OptionsTemplate = '';
     possibleOffersCollection[type].forEach((option) => {
-      let isChecked = '';
-      offers.find((offer) => { // если находит среди офферов первое совпадающее по тайтлу с опцией, то делает этот оффер чекнутым
+      let isChecked = ''; // флаг - чекнуто ли offer
+
+      const checkOffer = (offer) => { // чекает offer-ы, если такие же опции присутствуют в данных точки
 
         if (option.title === offer.title) {
           isChecked = 'checked';
           offer.price = option.price; // чтобы передать цену в опции BlankPoint
         }
 
-      });
+        return option.title === offer.title;
+      };
+
+      offers.find(checkOffer); // вызывает функцию checkOffer, только если находится опция, совпадающая по названию с одним из offer-ов
 
       OptionsTemplate += createOptionTemplate(option, isChecked);
     });
@@ -301,7 +305,7 @@ export default class EditForm extends SmartView {
       return cityName === evt.target.value;
     };
 
-    this._citiesNames.find(changeCity); // вызывает функцию changeCity только если название введённого города имеется в datalist
+    this._citiesNames.find(changeCity); // вызывает функцию changeCity только если в datalist находится название введённого города
 
     if (!isCity) { // если введёный город отсутствует, то выдаётся соответствующее сообщение setCustomValidity
       this.getElement().querySelector('.event__input--destination').setCustomValidity('This city is not available, please select one in the popup list.');
