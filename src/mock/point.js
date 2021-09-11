@@ -31,11 +31,11 @@ export const getPictures = () => { // создание массива объек
 };
 
 export const getOffers = (type) => { // создание массива объектов опций
-  const offers = new Set();
+  const offers = [];
   possibleOffers[type].forEach((possibleOffer) => {
     const marker = getRandomInteger(0, 1);
     if (marker) {
-      offers.add(possibleOffer);
+      offers.push(possibleOffer);
     }
   });
   return offers;

@@ -1,5 +1,58 @@
 import dayjs from 'dayjs';
 
+export const sortByDateFrom = (pointOne, pointTwo) => dayjs(pointOne.dateFrom).diff(dayjs(pointTwo.dateFrom));
+
+export const sortByPrice = (pointOne, pointTwo) => {
+
+  if (pointTwo.basePrice === pointOne.basePrice) { // если у точек одинаковая цена, то они сортируются по дате-времени начала
+    return dayjs(pointOne.dateFrom).diff(dayjs(pointTwo.dateFrom));
+  }
+
+  return pointTwo.basePrice - pointOne.basePrice;
+};
+
+export const sortByDuration = (pointOne, pointTwo) => {
+  const firstPointTravelDuration = dayjs(pointOne.dateTo).diff(dayjs(pointOne.dateFrom));
+  const secondPointTravelDuration = dayjs(pointTwo.dateTo).diff(dayjs(pointTwo.dateFrom));
+  return secondPointTravelDuration - firstPointTravelDuration;
+};
+
+export const getRouteName = (points) => { // вернуть имя маршрута
+  let routeName = 'Route Info';
+
+  if (points.length) {
+    const pointsByDateFrom = points.slice().sort(sortByDateFrom);
+    routeName = `${pointsByDateFrom[0].destination.name} ... ${pointsByDateFrom[pointsByDateFrom.length - 1].destination.name}` ;
+
+    if (pointsByDateFrom.length === 3) {
+      routeName = `${pointsByDateFrom[0].destination.name} &mdash; ${pointsByDateFrom[1].destination.name}  &mdash; ${pointsByDateFrom[2].destination.name}`;
+    } else if (pointsByDateFrom.length === 2) {
+      routeName = `${pointsByDateFrom[0].destination.name} &mdash; ${pointsByDateFrom[1].destination.name}`;
+    } else if (pointsByDateFrom.length === 1) {
+      routeName = `${pointsByDateFrom[0].destination.name}`;
+    }
+
+  }
+
+  return routeName;
+};
+
+export const getRouteDates = (points) => { // вернуть время маршрута
+  let routeDates = 'Dates Info';
+
+  if (points.length) {
+    const pointsByDateFrom = points.slice().sort(sortByDateFrom);
+    routeDates = `${pointsByDateFrom[0].dateFrom.format('MMM DD')} &nbsp;&mdash;&nbsp ${pointsByDateFrom[pointsByDateFrom.length - 1].dateTo.format('MMM DD')}`;
+
+    if (pointsByDateFrom[0].dateFrom.format('MMM') === pointsByDateFrom[pointsByDateFrom.length - 1].dateTo.format('MMM')) {
+      routeDates = `${pointsByDateFrom[0].dateFrom.format('MMM DD')} &nbsp;&mdash;&nbsp ${pointsByDateFrom[pointsByDateFrom.length - 1].dateTo.format('DD')}`;
+    }
+
+  }
+
+  return routeDates;
+};
+
 export const getRoutePrice = (points) => { // вернуть стоимость маршрута
   let routePrice = 0;
   points.forEach((point) => {
@@ -11,27 +64,6 @@ export const getRoutePrice = (points) => { // вернуть стоимость 
   return routePrice;
 };
 
-export const getRouteDates = (point) => { // вернуть время маршрута
-  let routeDates = `${point[0].dateFrom.format('MMM DD')} &nbsp;&mdash;&nbsp ${point[point.length - 1].dateTo.format('MMM DD')}`;
-  if (point[0].dateFrom.format('MMM') === point[point.length - 1].dateTo.format('MMM')) {
-    routeDates = `${point[0].dateFrom.format('MMM DD')} &nbsp;&mdash;&nbsp ${point[point.length - 1].dateTo.format('DD')}`;
-  }
-  return routeDates;
-};
-
-export const getRouteName = (point) => { // вернуть имя маршрута
-  let routeName = `${point[0].destination.name} ... ${point[point.length - 1].destination.name}` ;
-  if (point.length === 3) {
-    routeName = `${point[0].destination.name} &mdash; ${point[1].destination.name}  &mdash; ${point[2].destination.name}`;
-  } else if (point.length === 2) {
-    routeName = `${point[0].destination.name} &mdash; ${point[1].destination.name}`;
-  } else if (point.length === 1) {
-    routeName = `${point[0].destination.name}`;
-  }
-  return routeName;
-};
-
-
 export const getCitiesUniqueNames = (points) => { // выдаёт отсортированный массив уникальных названий городов из массива точек маршрута
   let citiesNames = new Set();
   points.forEach((point) => {
@@ -41,17 +73,4 @@ export const getCitiesUniqueNames = (points) => { // выдаёт отсорти
   return citiesNames;
 };
 
-export const sortByDateFrom = (pointOne, pointTwo) => dayjs(pointOne.dateFrom).diff(dayjs(pointTwo.dateFrom));
 
-export const sortByPrice = (pointOne, pointTwo) => {
-  if (pointTwo.basePrice === pointOne.basePrice) { // если у точек одинаковая цена, то они сортируются по дате-времени начала
-    return dayjs(pointOne.dateFrom).diff(dayjs(pointTwo.dateFrom));
-  }
-  return pointTwo.basePrice - pointOne.basePrice;
-};
-
-export const sortByDuration = (pointOne, pointTwo) => {
-  const firstPointTravelDuration = dayjs(pointOne.dateTo).diff(dayjs(pointOne.dateFrom));
-  const secondPointTravelDuration = dayjs(pointTwo.dateTo).diff(dayjs(pointTwo.dateFrom));
-  return secondPointTravelDuration - firstPointTravelDuration;
-};

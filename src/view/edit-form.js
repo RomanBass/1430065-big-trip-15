@@ -1,4 +1,4 @@
-import {getOffers, possibleOffers} from '../mock/point.js';
+import {getOffers} from '../mock/point.js';
 import {points} from '../main.js';
 import {getCitiesUniqueNames} from '../utils/route.js';
 import { BlankPoint } from '../utils/const.js';
@@ -7,6 +7,8 @@ import SmartView from './smart.js';
 import flatpickr from 'flatpickr';
 import '../../node_modules/flatpickr/dist/flatpickr.min.css';
 import dayjs from 'dayjs';
+
+const RADIX_10 = 10; // основание десятичной системы исчисления
 
 const createDataListTemplate = (cityName) => `<option value="${cityName}"></option>`;//возвращает образец ДОМ элемента в datalist наименований городов
 
@@ -24,7 +26,7 @@ const createOptionTemplate = (offer, isChecked) => { //возвращает об
 
 const createPhotoTemplate = (picture) => `<img class="event__photo" src="${picture.src}" alt="${picture.description}">`;  //возвращает образец ДОМ элемента фотографии
 
-const createEditFormTemplate = (point = BlankPoint) => {
+const createEditFormTemplate = (point = BlankPoint, possibleOffers) => {
   const {destination, basePrice, type, dateFrom, dateTo, offers} = point;
   const {description, name, pictures} = destination;
 
@@ -37,19 +39,23 @@ const createEditFormTemplate = (point = BlankPoint) => {
   };
 
   let isOffer = ''; // переменная скрывает блок с опциями, если опции отсутствуют для этой точки
-  if (possibleOffers[type].length === 0){
+  if (!possibleOffers[type].length){
     isOffer = 'visually-hidden';
   }
 
   const getOptionsTemplate = (possibleOffersCollection) =>  { //возвращает ДОМ элемент возможных опции для точки типа type
     let OptionsTemplate = '';
     possibleOffersCollection[type].forEach((option) => {
-      let isChecked = '';
-      offers.forEach((offer) => { //чекает те опции, которые имеются в моках точки
-        if (option.title === offer.title) {
-          isChecked = 'checked';
-        }
-      });
+
+      let isChecked = ''; // флаг - чекнуто ли offer
+
+      const checkedOffer = offers.find((offer) => option.title === offer.title); // находит и присваивает offer, совпадающий по названию с опцией
+
+      if (checkedOffer) {
+        isChecked = 'checked';
+        checkedOffer.price = option.price; // чтобы передать цену в опции BlankPoint
+      }
+
       OptionsTemplate += createOptionTemplate(option, isChecked);
     });
     return OptionsTemplate;
@@ -64,12 +70,12 @@ const createEditFormTemplate = (point = BlankPoint) => {
   };
 
   let isPicture = ''; //переменная скрывает блок фотографий со скролом, если фотографии отсутствуют в данных точки
-  if (pictures.length === 0) {
+  if (!pictures.length) {
     isPicture = 'visually-hidden';
   }
 
   let isDestinationInfo = ''; //переменная скрывает блок информации о пункте назначения, если для него отсутствует описание и фотографии
-  if (pictures.length === 0 && description === '') {
+  if (!pictures.length && description === '') {
     isDestinationInfo = 'visually-hidden';
   }
 
@@ -173,7 +179,7 @@ const createEditFormTemplate = (point = BlankPoint) => {
           <span class="visually-hidden">Price</span>
           &euro;
         </label>
-        <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="${basePrice}">
+        <input class="event__input  event__input--price" id="event-price-1" type="number" name="event-price" value="${basePrice}">
       </div>
 
       <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
@@ -200,11 +206,13 @@ const createEditFormTemplate = (point = BlankPoint) => {
 };
 
 export default class EditForm extends SmartView {
-  constructor(point = BlankPoint) {
+  constructor(point = BlankPoint, possibleOffers) {
     super();
     this._data = point; // this._point заменён на this._data чтобы отнаследоваться от SmartView
     this._dateFromPicker = null;
     this._dateToPicker = null;
+    this._offers = possibleOffers;
+    this._citiesNames = getCitiesUniqueNames(points);
 
     this._editFormRollupButtonClickHandler = this._editFormRollupButtonClickHandler.bind(this);
     this._editFormSubmitButtonClickHandler = this._editFormSubmitButtonClickHandler.bind(this);
@@ -212,15 +220,18 @@ export default class EditForm extends SmartView {
     this._destinationInputChangeHandler = this._destinationInputChangeHandler.bind(this);
     this._dateFromChangeHandler = this._dateFromChangeHandler.bind(this);
     this._dateToChangeHandler = this._dateToChangeHandler.bind(this);
+    this._basePriceInputChangeHandler = this._basePriceInputChangeHandler.bind(this);
+    this._offersChangeHandler = this._offersChangeHandler.bind(this);
+    this._deletePointClickHandler = this._deletePointClickHandler.bind(this);
+    this._addFormCancelHandler = this._addFormCancelHandler.bind(this);
 
     this._setInnerHandlers();
     this._setDateFromPicker();
     this._setDateToPicker();
-
   }
 
   getTemplate() {
-    return createEditFormTemplate(this._data);
+    return createEditFormTemplate(this._data, this._offers);
   }
 
   _editFormRollupButtonClickHandler(evt) {
@@ -247,6 +258,26 @@ export default class EditForm extends SmartView {
     this.getElement().querySelector('form').addEventListener('submit', this._editFormSubmitButtonClickHandler);
   }
 
+  _deletePointClickHandler(evt) {
+    evt.preventDefault();
+    this._callback.deletePointClickHandler(this._data);
+  }
+
+  setDeletePointClickHandler(callback) {
+    this._callback.deletePointClickHandler = callback;
+    this.getElement().querySelector('.event__reset-btn').addEventListener('click', this._deletePointClickHandler);
+  }
+
+  _addFormCancelHandler(evt) { // добавляет обработчик на кнопку Cancel для удаления формы добавления
+    evt.preventDefault();
+    this._callback.addFormCancelHandler();
+  }
+
+  setAddFormCancelHandler(callback) {
+    this._callback.addFormCancelHandler = callback;
+    this.getElement().querySelector('.event__reset-btn').addEventListener('click', this._addFormCancelHandler);
+  }
+
   _typeFieldsetChangeHandler(evt) { //обработчик fieldset по изменению типа точки
     this.updateData({
       type: evt.target.value,
@@ -255,9 +286,38 @@ export default class EditForm extends SmartView {
   }
 
   _destinationInputChangeHandler(evt) { //обработчик input ввода названия города
-    this.updateData({
-      destination: {description: getDescription(), name: evt.target.value, pictures: getPictures()},
-    });
+
+    const availableCity = this._citiesNames.find((cityName) => cityName === evt.target.value); // находит в datalist введёный город и присваивает данной константе
+
+    if (availableCity) { // Если введёный город есть в datalist, то производит изменение.
+      this.updateData({  // Иначе - выдаёт сообщение setCustomValidity
+        destination: {description: getDescription(), name: evt.target.value, pictures: getPictures()},
+      });
+    } else {
+      this.getElement().querySelector('.event__input--destination').setCustomValidity('This city is not available, please select one from the popup list.');
+      this.getElement().querySelector('.event__input--destination').reportValidity();
+    }
+
+  }
+
+  _basePriceInputChangeHandler(evt) { //обработчик input ввода стоимости
+    this.updateData({basePrice: parseInt(evt.target.value, RADIX_10)}); //обновляются данные точки в части стоимости
+  }
+
+  _offersChangeHandler(evt) { //обработчик выбора опций
+    const clickedOptionTitle = evt.target.parentElement.querySelector('label span:first-child').textContent; //достаёт из разметки наименование кликУемой опции
+    const isClickedOption = this._data.offers.some((option) => option.title === clickedOptionTitle); //флаг проверки наличия кликнутой опции в массиве опций данной точки
+
+    if (isClickedOption) {
+      this._data.offers = this._data.offers.filter((option) => option.title !== clickedOptionTitle); //кликнутая опция удаляется
+    } else {
+      const clickedOptionPrice = evt.target.parentElement.querySelector('label span:last-child').textContent; //достаёт из раметки цену кликуемой опции
+      const ClickedOption = {title: clickedOptionTitle, price: parseInt(clickedOptionPrice, RADIX_10)}; //создаёт объект кликнутой опции
+
+      this._data.offers.unshift(ClickedOption); //добавляет объект кликнутой опции в массив опций данной точки
+    }
+
+    this.updateData({offers: this._data.offers}); //обновляются данные точки в части опций
   }
 
   restoreHandlers() { //восстанавливает все необходимые обработчики на новую форму редактирования
@@ -271,6 +331,8 @@ export default class EditForm extends SmartView {
   _setInnerHandlers() { //вешает "внутренние" обработчики на форму редактирования
     this.getElement().querySelector('.event__type-group').addEventListener('change', this._typeFieldsetChangeHandler); //вешает обработчик на fieldset выбора типа точки
     this.getElement().querySelector('.event__input--destination').addEventListener('change', this._destinationInputChangeHandler); //вешает обработчик на input ввода названия города
+    this.getElement().querySelector('.event__input--price').addEventListener('change', this._basePriceInputChangeHandler); //вешает обработчик на input ввода цены
+    this.getElement().querySelector('.event__available-offers').addEventListener('change', this._offersChangeHandler); //вешает обработчик на опции
   }
 
   _setDateFromPicker() { // устанавливает окно ввода даты старта

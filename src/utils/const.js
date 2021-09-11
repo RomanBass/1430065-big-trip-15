@@ -32,9 +32,9 @@ export const DESCRIPTION_SENTENCES = [
   'In rutrum ac purus sit amet tempus.'];
 
 export const AddFormData = { // данные для дефолтной точки
-  BASE_PRICE: 150,
+  BASE_PRICE: 100,
   TRIP_DURATION: 3,
-  DESTINATION: {description: '', name: '', pictures: []},
+  DESTINATION: {description: '', name: CITIES[0], pictures: []},
   ID: nanoid(),
   IS_FAVORITE: false,
   OFFERS: [{title: 'Taxi-Option-2'}, {title: 'Taxi-Option-5'}],
@@ -56,4 +56,28 @@ export const SortType = {
   BY_DATE_FROM: 'sort-day',
   BY_PRICE: 'sort-price',
   BY_DURATION: 'sort-time',
+};
+
+export const UserAction = {
+  UPDATE_POINT: 'UPDATE_POINT',
+  ADD_POINT: 'ADD_POINT',
+  DELETE_POINT: 'DELETE_POINT',
+};
+
+export const UpdateType = {
+  PATCH: 'PATCH',
+  MINOR: 'MINOR',
+  MAJOR: 'MAJOR',
+};
+
+export const FilterType = {
+  EVERYTHING: 'everything',
+  FUTURE: 'future',
+  PAST: 'past',
+};
+
+export const NoPointMessage = { //сообщения при отсутствии базовых или отфильтрованных точек
+  [FilterType.EVERYTHING]: 'Click New Event to create your first point',
+  [FilterType.FUTURE]: 'There are no future events now',
+  [FilterType.PAST]: 'There are no past events now',
 };

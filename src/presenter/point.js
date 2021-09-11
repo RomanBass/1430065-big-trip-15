@@ -2,6 +2,7 @@ import PointView from '../view/point';
 import EditFormView from '../view/edit-form.js';
 import { render, RenderPosition, replace, remove } from '../utils/render';
 import { BlankPoint } from '../utils/const';
+import { UserAction, UpdateType } from '../utils/const.js';
 
 const Mode = { // определяет режим отображения - точка или форма редактирования
   DEFAULT: 'DEFAULT',
@@ -21,28 +22,24 @@ export default class Point {
     this._handleEditFormToPointClick = this._handleEditFormToPointClick.bind(this);
     this._handleFavoriteButtonClick = this._handleFavoriteButtonClick.bind(this);
     this._handleEditFormSubmit = this._handleEditFormSubmit.bind(this);
+    this._handleDeletePoint = this._handleDeletePoint.bind(this);
     this._escKeyDownHandler = this._escKeyDownHandler.bind(this);
   }
 
-  init(point) {
+  init(point, offers) {
     this._point = point;
 
     const prevPointComponent = this._pointComponent;
     const prevEditFormComponent = this._editFormComponent;
 
     this._pointComponent = new PointView(point);
-    this._editFormComponent = new EditFormView(point);
+    this._editFormComponent = new EditFormView(point, offers);
 
     this._pointComponent.setPointRollupButtonClickHandler(this._handlePointToEditFormClick);
     this._editFormComponent.setEditFormRollupButtonClickHandler(this._handleEditFormToPointClick);
     this._editFormComponent.setEditFormSubmitButtonClickHandler(this._handleEditFormSubmit);
+    this._editFormComponent.setDeletePointClickHandler(this._handleDeletePoint);
     this._pointComponent.setFavoriteButtonClickHandler(this._handleFavoriteButtonClick);
-
-    // if ((prevPointComponent === null || prevEditFormComponent === null) && this._point.id == BlankPoint.id) { // если это форма добавления, то отрисовывается в виде редактирования
-    //   render(this._eventListContainer, this._editFormComponent, RenderPosition.BEFOREEND);
-    //   this._mode = Mode.EDITING;
-    //   return;
-    // }
 
     if (this._point.id === BlankPoint.id) { // чтобы не отрисовывалась точка по данным формы добавления
       return;
@@ -107,6 +104,8 @@ export default class Point {
 
   _handleFavoriteButtonClick() {
     this._changeData(
+      UserAction.UPDATE_POINT,
+      UpdateType.PATCH,
       Object.assign(
         {},
         this._point,
@@ -116,8 +115,19 @@ export default class Point {
   }
 
   _handleEditFormSubmit(point) {
-    this._changeData(point);
+    this._changeData(
+      UserAction.UPDATE_POINT,
+      UpdateType.MINOR,
+      point,
+    );
     this._replaceEditFormToPoint();
   }
 
+  _handleDeletePoint(point) {
+    this._changeData(
+      UserAction.DELETE_POINT,
+      UpdateType.MAJOR,
+      point,
+    );
+  }
 }
