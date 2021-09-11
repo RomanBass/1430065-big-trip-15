@@ -46,19 +46,15 @@ const createEditFormTemplate = (point = BlankPoint, possibleOffers) => {
   const getOptionsTemplate = (possibleOffersCollection) =>  { //возвращает ДОМ элемент возможных опции для точки типа type
     let OptionsTemplate = '';
     possibleOffersCollection[type].forEach((option) => {
+
       let isChecked = ''; // флаг - чекнуто ли offer
 
-      const checkOffer = (offer) => { // чекает offer-ы, если такие же опции присутствуют в данных точки
+      const checkedOffer = offers.find((offer) => option.title === offer.title); // находит и присваивает offer, совпадающий по названию с опцией
 
-        if (option.title === offer.title) {
-          isChecked = 'checked';
-          offer.price = option.price; // чтобы передать цену в опции BlankPoint
-        }
-
-        return option.title === offer.title;
-      };
-
-      offers.find(checkOffer); // вызывает функцию checkOffer, только если находится опция, совпадающая по названию с одним из offer-ов
+      if (checkedOffer) {
+        isChecked = 'checked';
+        checkedOffer.price = option.price; // чтобы передать цену в опции BlankPoint
+      }
 
       OptionsTemplate += createOptionTemplate(option, isChecked);
     });
@@ -291,24 +287,14 @@ export default class EditForm extends SmartView {
 
   _destinationInputChangeHandler(evt) { //обработчик input ввода названия города
 
-    let isCity = false; // флаг, что введённый город присутствует в datalist
+    const availableCity = this._citiesNames.find((cityName) => cityName === evt.target.value); // находит в datalist введёный город и присваивает данной константе
 
-    const changeCity = (cityName) => { // обновляет название города, только если он есть в datalist
-
-      if (cityName === evt.target.value) {
-        isCity = true;
-        this.updateData({
-          destination: {description: getDescription(), name: evt.target.value, pictures: getPictures()},
-        });
-      }
-
-      return cityName === evt.target.value;
-    };
-
-    this._citiesNames.find(changeCity); // вызывает функцию changeCity только если в datalist находится название введённого города
-
-    if (!isCity) { // если введёный город отсутствует, то выдаётся соответствующее сообщение setCustomValidity
-      this.getElement().querySelector('.event__input--destination').setCustomValidity('This city is not available, please select one in the popup list.');
+    if (availableCity) { // Если введёный город есть в datalist, то производит изменение.
+      this.updateData({  // Иначе - выдаёт сообщение setCustomValidity
+        destination: {description: getDescription(), name: evt.target.value, pictures: getPictures()},
+      });
+    } else {
+      this.getElement().querySelector('.event__input--destination').setCustomValidity('This city is not available, please select one from the popup list.');
       this.getElement().querySelector('.event__input--destination').reportValidity();
     }
 
