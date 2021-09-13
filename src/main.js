@@ -8,6 +8,7 @@ import PointsModel from './model/points.js';
 import FilterModel from './model/filter.js';
 import FilterPresenter from './presenter/filter.js';
 import { possibleOffers } from './mock/point.js';
+import { MenuItem } from './utils/const.js';
 
 const POINTS_COUNT = 5;
 const points = new Array(POINTS_COUNT).fill().map(generatePoint); // массив точек маршрута
@@ -24,7 +25,9 @@ const tripElement = siteHeaderElement.querySelector('.trip-main');
 const filtersElement = siteHeaderElement.querySelector('.trip-controls__filters');
 const tripEventsElement = document.querySelector('.trip-events');
 
-render(menuElement, new SiteMenuView(), RenderPosition.BEFOREEND); // отрисовки компонентов...
+const siteMenuComponent = new SiteMenuView();
+
+render(menuElement, siteMenuComponent, RenderPosition.BEFOREEND); // отрисовки компонентов...
 
 const tripInfo = new InfoAndPriceView(getRoutePrice(pointsModel.getPoints()), getRouteDates(pointsModel.getPoints()), getRouteName(pointsModel.getPoints()));
 
@@ -35,6 +38,20 @@ pointsModel.addObserver(() => {
 
 const tripPresenter = new TripPresenter(tripEventsElement, pointsModel, filterModel);
 const filterPresenter = new FilterPresenter(filtersElement, filterModel, pointsModel);
+
+const handleSiteMenuClick = (menuItem) => {
+  switch (menuItem) {
+    case MenuItem.POINTS:
+      //
+      break;
+    case MenuItem.STATISTICS:
+      //
+      break;
+  }
+//console.log('click');
+};
+
+siteMenuComponent.setMenuClickHandler(handleSiteMenuClick);
 
 tripPresenter.init();
 filterPresenter.init();

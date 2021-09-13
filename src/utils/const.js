@@ -81,3 +81,8 @@ export const NoPointMessage = { //сообщения при отсутствии
   [FilterType.FUTURE]: 'There are no future events now',
   [FilterType.PAST]: 'There are no past events now',
 };
+
+export const MenuItem = {
+  POINTS: 'POINTS',
+  STATISTICS: 'STATISTICS',
+};
