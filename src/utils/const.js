@@ -83,6 +83,6 @@ export const NoPointMessage = { //сообщения при отсутствии
 };
 
 export const MenuItem = {
-  POINTS: 'POINTS',
-  STATISTICS: 'STATISTICS',
+  TABLE: 'table',
+  STATISTICS: 'stats',
 };

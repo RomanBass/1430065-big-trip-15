@@ -26,13 +26,11 @@ export default class Trip {
     this._handleViewAction = this._handleViewAction.bind(this);
     this._handleModelEvent = this._handleModelEvent.bind(this);
 
-    this._pointsModel.addObserver(this._handleModelEvent);
-    this._filterModel.addObserver(this._handleModelEvent);
-
     this._pointNewPresenter = new PointNewPresenter(this._eventsListComponent, this._handleViewAction);
   }
 
   init() {
+
     if (!this._getPoints().length) { // если точек нет, то отображается заглушка
       this._renderNoPoint();
     } else {
@@ -40,6 +38,9 @@ export default class Trip {
       this._renderEventsList();
       this._renderPoints();
     }
+
+    this._pointsModel.addObserver(this._handleModelEvent);
+    this._filterModel.addObserver(this._handleModelEvent);
   }
 
   createPoint() {
@@ -55,8 +56,18 @@ export default class Trip {
     remove(this._noPointComponent);
   }
 
+  destroy() {
+    this._clearPointsList();
+
+    remove(this._sortingComponent);
+    remove(this._eventsListComponent);
+
+    this._pointsModel.removeObserver(this._handleModelEvent);
+    this._filterModel.removeObserver(this._handleModelEvent);
+  }
+
   _clearPointsList() { // удаляет все точки
-    this._pointNewPresenter.destroy;
+    this._pointNewPresenter.destroy();
     Object
       .values(this._pointPresenters)
       .forEach((presenter) => presenter.destroy());

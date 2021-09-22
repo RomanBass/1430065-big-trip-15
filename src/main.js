@@ -10,7 +10,7 @@ import FilterPresenter from './presenter/filter.js';
 import { possibleOffers } from './mock/point.js';
 import { MenuItem } from './utils/const.js';
 
-const POINTS_COUNT = 5;
+const POINTS_COUNT = 3;
 const points = new Array(POINTS_COUNT).fill().map(generatePoint); // массив точек маршрута
 
 const pointsModel = new PointsModel();
@@ -39,16 +39,17 @@ pointsModel.addObserver(() => {
 const tripPresenter = new TripPresenter(tripEventsElement, pointsModel, filterModel);
 const filterPresenter = new FilterPresenter(filtersElement, filterModel, pointsModel);
 
-const handleSiteMenuClick = (menuItem) => {
-  switch (menuItem) {
-    case MenuItem.POINTS:
-      //
+const handleSiteMenuClick = (menuOptionName) => {
+
+  switch (menuOptionName) {
+    case MenuItem.TABLE:
+      tripPresenter.init();
       break;
     case MenuItem.STATISTICS:
-      //
+      tripPresenter.destroy();
       break;
   }
-//console.log('click');
+
 };
 
 siteMenuComponent.setMenuClickHandler(handleSiteMenuClick);
