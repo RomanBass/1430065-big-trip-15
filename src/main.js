@@ -2,7 +2,7 @@ import SiteMenuView from './view/site-menu.js';
 import InfoAndPriceView from './view/info-price.js';
 import {generatePoint} from './mock/point.js';
 import { getRouteDates, getRoutePrice, getRouteName } from './utils/route.js';
-import {render, RenderPosition} from './utils/render.js';
+import {remove, render, RenderPosition} from './utils/render.js';
 import TripPresenter from './presenter/trip.js';
 import PointsModel from './model/points.js';
 import FilterModel from './model/filter.js';
@@ -12,10 +12,9 @@ import { MenuItem } from './utils/const.js';
 import StatisticsView from './view/statistics.js';
 import { getMoneyByTypeData } from './utils/statistics.js';
 
-const POINTS_COUNT = 10;
+const POINTS_COUNT = 4;
 const points = new Array(POINTS_COUNT).fill().map(generatePoint); // массив точек маршрута
-
-console.log(getMoneyByTypeData(points));
+//console.log(getMoneyByTypeData(points));
 
 const pointsModel = new PointsModel();
 pointsModel.setPoints(points);
@@ -45,14 +44,19 @@ pointsModel.addObserver(() => {
 const tripPresenter = new TripPresenter(tripEventsElement, pointsModel, filterModel);
 const filterPresenter = new FilterPresenter(filtersElement, filterModel, pointsModel);
 
+let statisticsComponent = null;
+
 const handleSiteMenuClick = (menuOptionName) => {
 
   switch (menuOptionName) {
     case MenuItem.TABLE:
       tripPresenter.init();
+      remove(statisticsComponent);
       break;
     case MenuItem.STATISTICS:
       tripPresenter.destroy();
+      statisticsComponent = new StatisticsView(pointsModel.getPoints(), getMoneyByTypeData(pointsModel.getPoints()));
+      render(bodyElement, statisticsComponent, RenderPosition.BEFOREEND);
       break;
   }
 
@@ -60,15 +64,13 @@ const handleSiteMenuClick = (menuOptionName) => {
 
 siteMenuComponent.setMenuClickHandler(handleSiteMenuClick);
 
-//tripPresenter.init();
+tripPresenter.init();
 filterPresenter.init();
 
-const statistics = new StatisticsView(pointsModel.getPoints());
-
-render(bodyElement, statistics, RenderPosition.BEFOREEND);
-
 pointsModel.addObserver(() => {
-  statistics.updateData({tripPoints: pointsModel.getPoints()});
+  if (statisticsComponent) {
+    statisticsComponent.updateData({tripPoints: pointsModel.getPoints(), tripMoneyData: getMoneyByTypeData(pointsModel.getPoints())});
+  }
 });
 
 document.querySelector('.trip-main__event-add-btn').addEventListener('click', (evt) => {

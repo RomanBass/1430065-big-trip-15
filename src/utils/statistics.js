@@ -25,7 +25,7 @@ const getPointsByType = (points) => { // трансформирует масси
   return PointsByType;
 };
 
-export const getMoneyByTypeData = (points) => {
+export const getMoneyByTypeData = (points) => { // возвращает объект типа {..., тип: полная стоимость,...}
   const INITIAL_TYPE_PRICE = 0;
   const moneyByTypeDataArray = [];
   const moneyByTypeDataObject = {};

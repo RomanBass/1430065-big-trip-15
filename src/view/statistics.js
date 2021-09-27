@@ -2,14 +2,14 @@ import SmartView from './smart';
 import Chart from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 
-const renderMoneyChart = (moneyCtx) => (
+const renderMoneyChart = (moneyCtx, moneyData) => (
   new Chart(moneyCtx, {
     plugins: [ChartDataLabels],
     type: 'horizontalBar',
     data: {
-      labels: ['TAXI', 'BUS', 'TRAIN', 'SHIP', 'TRANSPORT', 'DRIVE'],
+      labels: Object.keys(moneyData),
       datasets: [{
-        data: [400, 300, 200, 160, 150, 100],
+        data: Object.values(moneyData),
         backgroundColor: '#ffffff',
         hoverBackgroundColor: '#ffffff',
         anchor: 'start',
@@ -88,28 +88,34 @@ const createStatisticsTemplate = (points) => (
 );
 
 export default class Statistics extends SmartView {
-  constructor(points) {
+  constructor(points, moneyData) {
     super();
 
-    this._data = {tripPoints: points};
+    this._data = {tripPoints: points, tripMoneyData: moneyData};
     this._moneyChart = null;
 
     this._setCharts();
   }
 
   getTemplate() {
-    return createStatisticsTemplate(this._data.tripPoints);
+    return createStatisticsTemplate(this._data.tripPoints, this._data.tripMoneyData);
   }
 
   _setCharts() {
+
+    if (this._moneyChart) {
+      this._moneyChart = null;
+    }
+
     const moneyCtx = this.getElement().querySelector('#money');
     const BAR_HEIGHT = 55;
-    moneyCtx.height = BAR_HEIGHT * 5; // Рассчитаем высоту канваса в зависимости от того, сколько данных в него будет передаваться
+    moneyCtx.height = BAR_HEIGHT * Object.values(this._data.tripMoneyData).length; // Рассчитаем высоту канваса в зависимости от того, сколько данных в него будет передаваться
 
-    this._moneyChart = renderMoneyChart(moneyCtx);
+    this._moneyChart = renderMoneyChart(moneyCtx, this._data.tripMoneyData);
   }
 
   restoreHandlers() {
+    this._setCharts();
   }
 
 }
