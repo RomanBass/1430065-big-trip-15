@@ -39,7 +39,7 @@ export const getMoneyByTypeData = (points) => { // возвращает объе
       currentTypePrice += point.basePrice;
     });
     moneyByTypeDataArray.push([type.toUpperCase(), currentTypePrice]);
-    currentTypePrice = 0;
+    currentTypePrice = INITIAL_TYPE_PRICE;
   });
 
   moneyByTypeDataArray.sort((a,b) => b[1] - a[1]);
@@ -49,4 +49,28 @@ export const getMoneyByTypeData = (points) => { // возвращает объе
   });
 
   return moneyByTypeDataObject;
+};
+
+export const getPointsNumberByTypeData = (points) => { // возвращает объект типа {..., тип: количество точек,...}
+  const INITIAL_TYPE_NUMBER = 0;
+  const numberByTypeDataArray = [];
+  const numberByTypeDataObject = {};
+  const PointsByType = getPointsByType(points);
+  const currentTypes = Object.keys(PointsByType);
+
+  let currentTypeNumber = INITIAL_TYPE_NUMBER;
+
+  currentTypes.forEach((type) => {
+    currentTypeNumber = PointsByType[type].length;
+    numberByTypeDataArray.push([type.toUpperCase(), currentTypeNumber]);
+    currentTypeNumber = INITIAL_TYPE_NUMBER;
+  });
+
+  numberByTypeDataArray.sort((a,b) => b[1] - a[1]);
+
+  numberByTypeDataArray.forEach((numberByTypeInstance) => {
+    numberByTypeDataObject[numberByTypeInstance[0]] = numberByTypeInstance[1];
+  });
+
+  return numberByTypeDataObject;
 };

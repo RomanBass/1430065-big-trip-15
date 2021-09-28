@@ -69,6 +69,73 @@ const renderMoneyChart = (moneyCtx, moneyData) => (
   })
 );
 
+const renderTypeChart = (typeCtx, typeData) => (
+  new Chart(typeCtx, {
+    plugins: [ChartDataLabels],
+    type: 'horizontalBar',
+    data: {
+      labels: Object.keys(typeData),
+      datasets: [{
+        data: Object.values(typeData),
+        backgroundColor: '#ffffff',
+        hoverBackgroundColor: '#ffffff',
+        anchor: 'start',
+      }],
+    },
+    options: {
+      plugins: {
+        datalabels: {
+          font: {
+            size: 13,
+          },
+          color: '#000000',
+          anchor: 'end',
+          align: 'start',
+          formatter: (val) => `${val}x`,
+        },
+      },
+      title: {
+        display: true,
+        text: 'TYPE',
+        fontColor: '#000000',
+        fontSize: 23,
+        position: 'left',
+      },
+      scales: {
+        yAxes: [{
+          ticks: {
+            fontColor: '#000000',
+            padding: 5,
+            fontSize: 13,
+          },
+          gridLines: {
+            display: false,
+            drawBorder: false,
+          },
+          barThickness: 44,
+        }],
+        xAxes: [{
+          ticks: {
+            display: false,
+            beginAtZero: true,
+          },
+          gridLines: {
+            display: false,
+            drawBorder: false,
+          },
+          minBarLength: 50,
+        }],
+      },
+      legend: {
+        display: false,
+      },
+      tooltips: {
+        enabled: false,
+      },
+    },
+  })
+);
+
 const createStatisticsTemplate = (points) => (
   `<section class="statistics">
 <h2 class="">Trip statistics ${points.length}</h2>
@@ -88,17 +155,22 @@ const createStatisticsTemplate = (points) => (
 );
 
 export default class Statistics extends SmartView {
-  constructor(points, moneyData) {
+  constructor(points, moneyData, typeData) {
     super();
 
-    this._data = {tripPoints: points, tripMoneyData: moneyData};
+    this._data = {tripPoints: points, tripMoneyData: moneyData, tripTypeData: typeData};
     this._moneyChart = null;
+    this._typeChart = null;
 
     this._setCharts();
   }
 
   getTemplate() {
-    return createStatisticsTemplate(this._data.tripPoints, this._data.tripMoneyData);
+    return createStatisticsTemplate(
+      this._data.tripPoints,
+      this._data.tripMoneyData,
+      this._data.tripTypeData,
+    );
   }
 
   _setCharts() {
@@ -107,11 +179,19 @@ export default class Statistics extends SmartView {
       this._moneyChart = null;
     }
 
+    if (this._typeChart) {
+      this._typeChart = null;
+    }
+
     const moneyCtx = this.getElement().querySelector('#money');
+    const typeCtx = this.getElement().querySelector('#type');
     const BAR_HEIGHT = 55;
+
     moneyCtx.height = BAR_HEIGHT * Object.values(this._data.tripMoneyData).length; // Рассчитаем высоту канваса в зависимости от того, сколько данных в него будет передаваться
+    typeCtx.height = BAR_HEIGHT * Object.values(this._data.tripTypeData).length;
 
     this._moneyChart = renderMoneyChart(moneyCtx, this._data.tripMoneyData);
+    this._typeChart = renderTypeChart(typeCtx, this._data.tripTypeData);
   }
 
   restoreHandlers() {

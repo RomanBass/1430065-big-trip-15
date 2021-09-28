@@ -10,11 +10,11 @@ import FilterPresenter from './presenter/filter.js';
 import { possibleOffers } from './mock/point.js';
 import { MenuItem } from './utils/const.js';
 import StatisticsView from './view/statistics.js';
-import { getMoneyByTypeData } from './utils/statistics.js';
+import { getMoneyByTypeData, getPointsNumberByTypeData} from './utils/statistics.js';
 
-const POINTS_COUNT = 4;
+const POINTS_COUNT = 10;
 const points = new Array(POINTS_COUNT).fill().map(generatePoint); // массив точек маршрута
-//console.log(getMoneyByTypeData(points));
+//console.log(getPointsNumberByTypeData(points));
 
 const pointsModel = new PointsModel();
 pointsModel.setPoints(points);
@@ -34,11 +34,20 @@ const siteMenuComponent = new SiteMenuView();
 
 render(menuElement, siteMenuComponent, RenderPosition.BEFOREEND); // отрисовки компонентов...
 
-const tripInfo = new InfoAndPriceView(getRoutePrice(pointsModel.getPoints()), getRouteDates(pointsModel.getPoints()), getRouteName(pointsModel.getPoints()));
+const tripInfo = new InfoAndPriceView(
+  getRoutePrice(pointsModel.getPoints()),
+  getRouteDates(pointsModel.getPoints()),
+  getRouteName(pointsModel.getPoints()));
 
 render(tripElement, tripInfo, RenderPosition.AFTERBEGIN);
 pointsModel.addObserver(() => {
-  tripInfo.updateData({tripPrice: getRoutePrice(pointsModel.getPoints()), tripDate: getRouteDates(pointsModel.getPoints()), tripName: getRouteName(pointsModel.getPoints())});
+  tripInfo.updateData(
+    {
+      tripPrice: getRoutePrice(pointsModel.getPoints()),
+      tripDate: getRouteDates(pointsModel.getPoints()),
+      tripName: getRouteName(pointsModel.getPoints()),
+    },
+  );
 });
 
 const tripPresenter = new TripPresenter(tripEventsElement, pointsModel, filterModel);
@@ -55,7 +64,12 @@ const handleSiteMenuClick = (menuOptionName) => {
       break;
     case MenuItem.STATISTICS:
       tripPresenter.destroy();
-      statisticsComponent = new StatisticsView(pointsModel.getPoints(), getMoneyByTypeData(pointsModel.getPoints()));
+
+      statisticsComponent = new StatisticsView(
+        pointsModel.getPoints(),
+        getMoneyByTypeData(pointsModel.getPoints()),
+        getPointsNumberByTypeData(pointsModel.getPoints()));
+
       render(bodyElement, statisticsComponent, RenderPosition.BEFOREEND);
       break;
   }
@@ -69,7 +83,13 @@ filterPresenter.init();
 
 pointsModel.addObserver(() => {
   if (statisticsComponent) {
-    statisticsComponent.updateData({tripPoints: pointsModel.getPoints(), tripMoneyData: getMoneyByTypeData(pointsModel.getPoints())});
+    statisticsComponent.updateData(
+      {
+        tripPoints: pointsModel.getPoints(),
+        tripMoneyData: getMoneyByTypeData(pointsModel.getPoints()),
+        tripTypeData: getPointsNumberByTypeData(pointsModel.getPoints()),
+      },
+    );
   }
 });
 
