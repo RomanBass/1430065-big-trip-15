@@ -10,11 +10,11 @@ import FilterPresenter from './presenter/filter.js';
 import { possibleOffers } from './mock/point.js';
 import { MenuItem } from './utils/const.js';
 import StatisticsView from './view/statistics.js';
-import { getMoneyByTypeData, getPointsNumberByTypeData} from './utils/statistics.js';
+import { getMoneyByTypeData, getPointsNumberByTypeData, getDurationByTypeData}
+  from  './utils/statistics.js';
 
 const POINTS_COUNT = 10;
 const points = new Array(POINTS_COUNT).fill().map(generatePoint); // массив точек маршрута
-//console.log(getPointsNumberByTypeData(points));
 
 const pointsModel = new PointsModel();
 pointsModel.setPoints(points);
@@ -68,7 +68,9 @@ const handleSiteMenuClick = (menuOptionName) => {
       statisticsComponent = new StatisticsView(
         pointsModel.getPoints(),
         getMoneyByTypeData(pointsModel.getPoints()),
-        getPointsNumberByTypeData(pointsModel.getPoints()));
+        getPointsNumberByTypeData(pointsModel.getPoints()),
+        getDurationByTypeData(pointsModel.getPoints()),
+      );
 
       render(bodyElement, statisticsComponent, RenderPosition.BEFOREEND);
       break;
@@ -88,6 +90,7 @@ pointsModel.addObserver(() => {
         tripPoints: pointsModel.getPoints(),
         tripMoneyData: getMoneyByTypeData(pointsModel.getPoints()),
         tripTypeData: getPointsNumberByTypeData(pointsModel.getPoints()),
+        tripDurationData: getDurationByTypeData(pointsModel.getPoints()),
       },
     );
   }

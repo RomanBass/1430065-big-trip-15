@@ -74,3 +74,29 @@ export const getPointsNumberByTypeData = (points) => { // возвращает �
 
   return numberByTypeDataObject;
 };
+
+export const getDurationByTypeData = (points) => { // возвращает объект типа {..., тип: полная стоимость,...}
+  const INITIAL_TYPE_DURATION = 0;
+  const durationByTypeDataArray = [];
+  const durationByTypeDataObject = {};
+  const PointsByType = getPointsByType(points);
+  const currentTypes = Object.keys(PointsByType);
+
+  let currentTypeDuration = INITIAL_TYPE_DURATION;
+
+  currentTypes.forEach((type) => {
+    PointsByType[type].forEach((point) => {
+      currentTypeDuration += point.dateTo - point.dateFrom;
+    });
+    durationByTypeDataArray.push([type.toUpperCase(), currentTypeDuration]);
+    currentTypeDuration = INITIAL_TYPE_DURATION;
+  });
+
+  durationByTypeDataArray.sort((a,b) => b[1] - a[1]);
+
+  durationByTypeDataArray.forEach((durationByTypeInstance) => {
+    durationByTypeDataObject[durationByTypeInstance[0]] = durationByTypeInstance[1];
+  });
+
+  return durationByTypeDataObject;
+};
