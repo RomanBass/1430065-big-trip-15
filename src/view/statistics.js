@@ -207,9 +207,9 @@ const renderDurationChart = (durationCtx, durationData) => (
 );
 
 
-const createStatisticsTemplate = (points) => (
+const createStatisticsTemplate = () => (
   `<section class="statistics">
-<h2 class="">Trip statistics ${points.length}</h2>
+<h2 class="visually-hidden">Trip statistics</h2>
 
 <div class="statistics__item">
   <canvas class="statistics__chart" id="money" width="900"></canvas>
@@ -226,11 +226,10 @@ const createStatisticsTemplate = (points) => (
 );
 
 export default class Statistics extends SmartView {
-  constructor(points, moneyData, typeData, durationData) {
+  constructor(moneyData, typeData, durationData) {
     super();
 
     this._data = {
-      tripPoints: points,
       tripMoneyData: moneyData,
       tripTypeData: typeData,
       tripDurationData: durationData,
@@ -245,7 +244,6 @@ export default class Statistics extends SmartView {
 
   getTemplate() {
     return createStatisticsTemplate(
-      this._data.tripPoints,
       this._data.tripMoneyData,
       this._data.tripTypeData,
       this._data.tripDurationData,

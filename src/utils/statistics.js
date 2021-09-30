@@ -1,5 +1,11 @@
 import { TYPES } from './const.js';
 
+const ARRAY_INDEX_ZERO = 0;
+const ARRAY_INDEX_ONE = 1;
+const INITIAL_TYPE_PRICE = 0;
+const INITIAL_TYPE_NUMBER = 0;
+const INITIAL_TYPE_DURATION = 0;
+
 const getPointsByType = (points) => { // трансформирует массив точек в объект массивов точек выбранных по типу
   const PointsByType = {};
   let allPoints = points.slice();
@@ -26,7 +32,7 @@ const getPointsByType = (points) => { // трансформирует масси
 };
 
 export const getMoneyByTypeData = (points) => { // возвращает объект типа {..., тип: полная стоимость,...}
-  const INITIAL_TYPE_PRICE = 0;
+
   const moneyByTypeDataArray = [];
   const moneyByTypeDataObject = {};
   const PointsByType = getPointsByType(points);
@@ -42,17 +48,18 @@ export const getMoneyByTypeData = (points) => { // возвращает объе
     currentTypePrice = INITIAL_TYPE_PRICE;
   });
 
-  moneyByTypeDataArray.sort((a,b) => b[1] - a[1]);
+  moneyByTypeDataArray.sort((a,b) => b[ARRAY_INDEX_ONE] - a[ARRAY_INDEX_ONE]);
 
   moneyByTypeDataArray.forEach((moneyByTypeInstance) => {
-    moneyByTypeDataObject[moneyByTypeInstance[0]] = moneyByTypeInstance[1];
+    moneyByTypeDataObject[moneyByTypeInstance[ARRAY_INDEX_ZERO]] =
+    moneyByTypeInstance[ARRAY_INDEX_ONE];
   });
 
   return moneyByTypeDataObject;
 };
 
 export const getPointsNumberByTypeData = (points) => { // возвращает объект типа {..., тип: количество точек,...}
-  const INITIAL_TYPE_NUMBER = 0;
+
   const numberByTypeDataArray = [];
   const numberByTypeDataObject = {};
   const PointsByType = getPointsByType(points);
@@ -66,17 +73,18 @@ export const getPointsNumberByTypeData = (points) => { // возвращает �
     currentTypeNumber = INITIAL_TYPE_NUMBER;
   });
 
-  numberByTypeDataArray.sort((a,b) => b[1] - a[1]);
+  numberByTypeDataArray.sort((a,b) => b[ARRAY_INDEX_ONE] - a[ARRAY_INDEX_ONE]);
 
   numberByTypeDataArray.forEach((numberByTypeInstance) => {
-    numberByTypeDataObject[numberByTypeInstance[0]] = numberByTypeInstance[1];
+    numberByTypeDataObject[numberByTypeInstance[ARRAY_INDEX_ZERO]] =
+    numberByTypeInstance[ARRAY_INDEX_ONE];
   });
 
   return numberByTypeDataObject;
 };
 
 export const getDurationByTypeData = (points) => { // возвращает объект типа {..., тип: полная стоимость,...}
-  const INITIAL_TYPE_DURATION = 0;
+
   const durationByTypeDataArray = [];
   const durationByTypeDataObject = {};
   const PointsByType = getPointsByType(points);
@@ -92,10 +100,11 @@ export const getDurationByTypeData = (points) => { // возвращает об�
     currentTypeDuration = INITIAL_TYPE_DURATION;
   });
 
-  durationByTypeDataArray.sort((a,b) => b[1] - a[1]);
+  durationByTypeDataArray.sort((a,b) => b[ARRAY_INDEX_ONE] - a[ARRAY_INDEX_ONE]);
 
   durationByTypeDataArray.forEach((durationByTypeInstance) => {
-    durationByTypeDataObject[durationByTypeInstance[0]] = durationByTypeInstance[1];
+    durationByTypeDataObject[durationByTypeInstance[ARRAY_INDEX_ZERO]] =
+    durationByTypeInstance[ARRAY_INDEX_ONE];
   });
 
   return durationByTypeDataObject;

@@ -13,7 +13,7 @@ import StatisticsView from './view/statistics.js';
 import { getMoneyByTypeData, getPointsNumberByTypeData, getDurationByTypeData}
   from  './utils/statistics.js';
 
-const POINTS_COUNT = 10;
+const POINTS_COUNT = 5;
 const points = new Array(POINTS_COUNT).fill().map(generatePoint); // массив точек маршрута
 
 const pointsModel = new PointsModel();
@@ -66,7 +66,6 @@ const handleSiteMenuClick = (menuOptionName) => {
       tripPresenter.destroy();
 
       statisticsComponent = new StatisticsView(
-        pointsModel.getPoints(),
         getMoneyByTypeData(pointsModel.getPoints()),
         getPointsNumberByTypeData(pointsModel.getPoints()),
         getDurationByTypeData(pointsModel.getPoints()),
@@ -87,7 +86,6 @@ pointsModel.addObserver(() => {
   if (statisticsComponent) {
     statisticsComponent.updateData(
       {
-        tripPoints: pointsModel.getPoints(),
         tripMoneyData: getMoneyByTypeData(pointsModel.getPoints()),
         tripTypeData: getPointsNumberByTypeData(pointsModel.getPoints()),
         tripDurationData: getDurationByTypeData(pointsModel.getPoints()),
