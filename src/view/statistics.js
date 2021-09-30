@@ -16,6 +16,8 @@ const renderMoneyChart = (moneyCtx, moneyData) => (
         backgroundColor: '#ffffff',
         hoverBackgroundColor: '#ffffff',
         anchor: 'start',
+        barThickness: 44,
+        minBarLength: 50,
       }],
     },
     options: {
@@ -48,7 +50,6 @@ const renderMoneyChart = (moneyCtx, moneyData) => (
             display: false,
             drawBorder: false,
           },
-          barThickness: 44,
         }],
         xAxes: [{
           ticks: {
@@ -59,7 +60,6 @@ const renderMoneyChart = (moneyCtx, moneyData) => (
             display: false,
             drawBorder: false,
           },
-          minBarLength: 50,
         }],
       },
       legend: {
@@ -83,6 +83,8 @@ const renderTypeChart = (typeCtx, typeData) => (
         backgroundColor: '#ffffff',
         hoverBackgroundColor: '#ffffff',
         anchor: 'start',
+        barThickness: 44,
+        minBarLength: 50,
       }],
     },
     options: {
@@ -115,7 +117,6 @@ const renderTypeChart = (typeCtx, typeData) => (
             display: false,
             drawBorder: false,
           },
-          barThickness: 44,
         }],
         xAxes: [{
           ticks: {
@@ -126,7 +127,6 @@ const renderTypeChart = (typeCtx, typeData) => (
             display: false,
             drawBorder: false,
           },
-          minBarLength: 50,
         }],
       },
       legend: {
@@ -150,6 +150,8 @@ const renderDurationChart = (durationCtx, durationData) => (
         backgroundColor: '#ffffff',
         hoverBackgroundColor: '#ffffff',
         anchor: 'start',
+        barThickness: 44,
+        minBarLength: 50,
       }],
     },
     options: {
@@ -182,7 +184,6 @@ const renderDurationChart = (durationCtx, durationData) => (
             display: false,
             drawBorder: false,
           },
-          barThickness: 44,
         }],
         xAxes: [{
           ticks: {
@@ -193,7 +194,6 @@ const renderDurationChart = (durationCtx, durationData) => (
             display: false,
             drawBorder: false,
           },
-          minBarLength: 50,
         }],
       },
       legend: {
