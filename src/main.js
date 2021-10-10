@@ -12,9 +12,18 @@ import { MenuItem } from './utils/const.js';
 import StatisticsView from './view/statistics.js';
 import { getMoneyByTypeData, getPointsNumberByTypeData, getDurationByTypeData}
   from  './utils/statistics.js';
+import Api from './api.js';
 
 const POINTS_COUNT = 5;
+const AUTHORIZATION = 'Basic df9df9df8sd8fg8h';
+const END_POINT = 'https://15.ecmascript.pages.academy/big-trip';
+
 const points = new Array(POINTS_COUNT).fill().map(generatePoint); // массив точек маршрута
+const api = new Api(END_POINT, AUTHORIZATION);
+
+api.getPoints().then((serverPoints) => {
+  console.log(serverPoints);
+});
 
 const pointsModel = new PointsModel();
 pointsModel.setPoints(points);
