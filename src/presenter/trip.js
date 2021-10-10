@@ -113,7 +113,7 @@ export default class Trip {
   _handleModelEvent(updateType, data) { // обрабатывает как отражается на представлении изменение в модели
     switch (updateType) { //обновление точки
       case UpdateType.PATCH:
-        this._pointPresenters[data.id].init(data);
+        this._pointPresenters[data.id].init(data, this._pointsModel.getOffers());
         break;
       case UpdateType.MINOR: //обновление списка точек
         this._clearPointsList();
