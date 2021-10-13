@@ -1,6 +1,6 @@
 import SiteMenuView from './view/site-menu.js';
 import InfoAndPriceView from './view/info-price.js';
-import {generatePoint} from './mock/point.js';
+//import {generatePoint} from './mock/point.js';
 import { getRouteDates, getRoutePrice, getRouteName } from './utils/route.js';
 import {remove, render, RenderPosition} from './utils/render.js';
 import TripPresenter from './presenter/trip.js';
@@ -14,24 +14,23 @@ import { getMoneyByTypeData, getPointsNumberByTypeData, getDurationByTypeData}
   from  './utils/statistics.js';
 import Api from './api.js';
 
-const POINTS_COUNT = 5;
+//const POINTS_COUNT = 5;
 const AUTHORIZATION = 'Basic df9df9df8sd8fg8h';
 const END_POINT = 'https://15.ecmascript.pages.academy/big-trip';
 
-const points = new Array(POINTS_COUNT).fill().map(generatePoint); // массив точек маршрута
+//const points = new Array(POINTS_COUNT).fill().map(generatePoint); // массив точек маршрута
 //console.log(points);
-const api = new Api(END_POINT, AUTHORIZATION);
+//const api = new Api(END_POINT, AUTHORIZATION);
 
-api.getPoints().then((serverPoints) => {
-  console.log(serverPoints);
-});
+// api.getPoints().then((serverPoints) => {
+//   console.log(serverPoints);
+// });
 
-const pointsModel = new PointsModel();
-pointsModel.setPoints(points);
-pointsModel.setOffers(possibleOffers);
+
+// pointsModel.setPoints(points);
+// pointsModel.setOffers(possibleOffers);
 //console.log(pointsModel.getPoints());
 
-const filterModel = new FilterModel();
 
 const siteHeaderElement = document.querySelector('.page-header'); // крупный блок
 const menuElement = siteHeaderElement.querySelector('.trip-controls__navigation'); // контейнеры...
@@ -40,6 +39,9 @@ const filtersElement = siteHeaderElement.querySelector('.trip-controls__filters'
 const bodyElement = document.querySelector('.page-main .page-body__container');
 const tripEventsElement = document.querySelector('.trip-events');
 
+const api = new Api(END_POINT, AUTHORIZATION);
+const filterModel = new FilterModel();
+const pointsModel = new PointsModel();
 const siteMenuComponent = new SiteMenuView();
 
 render(menuElement, siteMenuComponent, RenderPosition.BEFOREEND); // отрисовки компонентов...
@@ -108,5 +110,12 @@ document.querySelector('.trip-main__event-add-btn').addEventListener('click', (e
   evt.preventDefault();
   tripPresenter.createPoint();
 });
+
+api.getPoints().then((serverPoints) => {
+  pointsModel.setPoints(serverPoints);
+  pointsModel.setOffers(possibleOffers);
+});
+
+const points = pointsModel.getPoints();
 
 export {points, pointsModel};
