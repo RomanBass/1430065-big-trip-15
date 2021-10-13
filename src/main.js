@@ -19,6 +19,7 @@ const AUTHORIZATION = 'Basic df9df9df8sd8fg8h';
 const END_POINT = 'https://15.ecmascript.pages.academy/big-trip';
 
 const points = new Array(POINTS_COUNT).fill().map(generatePoint); // массив точек маршрута
+//console.log(points);
 const api = new Api(END_POINT, AUTHORIZATION);
 
 api.getPoints().then((serverPoints) => {
