@@ -8,8 +8,9 @@ export default class Points extends Observer {
     this._offers = [];
   }
 
-  setPoints(points) {
+  setPoints(updateType, points) {
     this._points = points.slice();
+    this._notify(updateType);
   }
 
   getPoints() {

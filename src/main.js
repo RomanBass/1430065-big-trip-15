@@ -8,7 +8,7 @@ import PointsModel from './model/points.js';
 import FilterModel from './model/filter.js';
 import FilterPresenter from './presenter/filter.js';
 import { possibleOffers } from './mock/point.js';
-import { MenuItem } from './utils/const.js';
+import { MenuItem, UpdateType } from './utils/const.js';
 import StatisticsView from './view/statistics.js';
 import { getMoneyByTypeData, getPointsNumberByTypeData, getDurationByTypeData}
   from  './utils/statistics.js';
@@ -111,10 +111,14 @@ document.querySelector('.trip-main__event-add-btn').addEventListener('click', (e
   tripPresenter.createPoint();
 });
 
-api.getPoints().then((serverPoints) => {
-  pointsModel.setPoints(serverPoints);
-  pointsModel.setOffers(possibleOffers);
-});
+api.getPoints()
+  .then((serverPoints) => {
+    pointsModel.setPoints(UpdateType.INIT, serverPoints);
+    pointsModel.setOffers(possibleOffers);
+  })
+  .catch(() => {
+    pointsModel.setPoints(UpdateType.INIT, []);
+  });
 
 const points = pointsModel.getPoints();
 
