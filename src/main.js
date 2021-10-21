@@ -122,4 +122,5 @@ api.getPoints()
 
 const points = pointsModel.getPoints();
 
-export {points, pointsModel};
+export {points};
+//export {points, pointsModel};

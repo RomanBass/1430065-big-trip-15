@@ -8,6 +8,7 @@ import { sortByDateFrom, sortByPrice, sortByDuration } from '../utils/route.js';
 import { filter } from '../utils/filter.js';
 import PointNewPresenter from './point-new.js';
 import { BlankPoint } from '../utils/const.js';
+import LoadingView from '../view/loading.js';
 
 export default class Trip {
   constructor(tripContainer, pointsModel, filterModel) {
@@ -20,16 +21,24 @@ export default class Trip {
     this._pointPresenters = {};
     this._currentSortType = SortType.BY_DATE_FROM;
     this._filterType = FilterType.EVERYTHING;
+    this._isLoading = true;
 
     this._handleModeChange = this._handleModeChange.bind(this);
     this._handleSortTypeChange = this._handleSortTypeChange.bind(this);
     this._handleViewAction = this._handleViewAction.bind(this);
     this._handleModelEvent = this._handleModelEvent.bind(this);
 
-    this._pointNewPresenter = new PointNewPresenter(this._eventsListComponent, this._handleViewAction);
+    this._pointNewPresenter = new PointNewPresenter(
+      this._eventsListComponent, this._handleViewAction,
+    );
+    this._loadingComponent = new LoadingView();
   }
 
   init() {
+    // if (this._isLoading) {
+    //   this._renderLoading();
+    //   return;
+    // }
 
     if (!this._getPoints().length) { // если точек нет, то отображается заглушка
       this._renderNoPoint();
@@ -61,6 +70,7 @@ export default class Trip {
 
     remove(this._sortingComponent);
     remove(this._eventsListComponent);
+    // remove(this._loadingComponent);
 
     this._pointsModel.removeObserver(this._handleModelEvent);
     this._filterModel.removeObserver(this._handleModelEvent);
@@ -131,6 +141,23 @@ export default class Trip {
           this._renderSort();
           this._renderPoints();
         }
+
+        break;
+      case UpdateType.INIT:
+        console.log('init event');
+        //   console.log(this._getPoints());
+        //   this._isLoading = false;
+        //   remove(this._loadingComponent);
+
+        //   if (!this._getPoints().length) {
+        //     this._renderNoPoint();
+        //   } else {
+        //     this._currentSortType = SortType.BY_DATE_FROM;
+        this._renderSort();
+        this._renderEventsList();
+        this._renderPoints();
+        //   }
+
         break;
     }
   }
@@ -178,5 +205,9 @@ export default class Trip {
   _renderEventsList() {
     render(this._tripContainer, this._eventsListComponent, RenderPosition.BEFOREEND);
   }
+
+  // _renderLoading() {
+  //   render(this._tripContainer, this._loadingComponent, RenderPosition.AFTERBEGIN);
+  // }
 
 }
