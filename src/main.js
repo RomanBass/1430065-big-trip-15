@@ -113,10 +113,11 @@ document.querySelector('.trip-main__event-add-btn').addEventListener('click', (e
 
 api.getPoints()
   .then((serverPoints) => {
-    pointsModel.setPoints(UpdateType.INIT, serverPoints);
     pointsModel.setOffers(possibleOffers);
+    pointsModel.setPoints(UpdateType.INIT, serverPoints);
   })
-  .catch(() => {
+  .catch((err) => {
+    console.log(err);
     pointsModel.setPoints(UpdateType.INIT, []);
   });
 

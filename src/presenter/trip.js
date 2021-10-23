@@ -35,18 +35,18 @@ export default class Trip {
   }
 
   init() {
-    // if (this._isLoading) {
-    //   this._renderLoading();
-    //   return;
-    // }
-
-    if (!this._getPoints().length) { // если точек нет, то отображается заглушка
-      this._renderNoPoint();
-    } else {
-      this._renderSort();
-      this._renderEventsList();
-      this._renderPoints();
+    if (this._isLoading) {
+      this._renderLoading();
+      //return;
     }
+
+    // if (!this._getPoints().length) { // если точек нет, то отображается заглушка
+    //   this._renderNoPoint();
+    // } else {
+    //   this._renderSort();
+    //   this._renderEventsList();
+    //   this._renderPoints();
+    // }
 
     this._pointsModel.addObserver(this._handleModelEvent);
     this._filterModel.addObserver(this._handleModelEvent);
@@ -70,7 +70,7 @@ export default class Trip {
 
     remove(this._sortingComponent);
     remove(this._eventsListComponent);
-    // remove(this._loadingComponent);
+    remove(this._loadingComponent);
 
     this._pointsModel.removeObserver(this._handleModelEvent);
     this._filterModel.removeObserver(this._handleModelEvent);
@@ -145,18 +145,18 @@ export default class Trip {
         break;
       case UpdateType.INIT:
         console.log('init event');
-        //   console.log(this._getPoints());
-        //   this._isLoading = false;
-        //   remove(this._loadingComponent);
 
-        //   if (!this._getPoints().length) {
-        //     this._renderNoPoint();
-        //   } else {
-        //     this._currentSortType = SortType.BY_DATE_FROM;
-        this._renderSort();
-        this._renderEventsList();
-        this._renderPoints();
-        //   }
+        this._isLoading = false;
+        remove(this._loadingComponent);
+
+        if (!this._getPoints().length) {
+          this._renderNoPoint();
+        } else {
+          this._currentSortType = SortType.BY_DATE_FROM;
+          this._renderSort();
+          this._renderEventsList();
+          this._renderPoints();
+        }
 
         break;
     }
@@ -206,8 +206,8 @@ export default class Trip {
     render(this._tripContainer, this._eventsListComponent, RenderPosition.BEFOREEND);
   }
 
-  // _renderLoading() {
-  //   render(this._tripContainer, this._loadingComponent, RenderPosition.AFTERBEGIN);
-  // }
+  _renderLoading() {
+    render(this._tripContainer, this._loadingComponent, RenderPosition.AFTERBEGIN);
+  }
 
 }
