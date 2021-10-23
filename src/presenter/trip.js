@@ -37,16 +37,15 @@ export default class Trip {
   init() {
     if (this._isLoading) {
       this._renderLoading();
-      //return;
+    } else {
+      if (!this._getPoints().length) { // если точек нет, то отображается заглушка
+        this._renderNoPoint();
+      } else {
+        this._renderSort();
+        this._renderEventsList();
+        this._renderPoints();
+      }
     }
-
-    // if (!this._getPoints().length) { // если точек нет, то отображается заглушка
-    //   this._renderNoPoint();
-    // } else {
-    //   this._renderSort();
-    //   this._renderEventsList();
-    //   this._renderPoints();
-    // }
 
     this._pointsModel.addObserver(this._handleModelEvent);
     this._filterModel.addObserver(this._handleModelEvent);
@@ -144,8 +143,6 @@ export default class Trip {
 
         break;
       case UpdateType.INIT:
-        console.log('init event');
-
         this._isLoading = false;
         remove(this._loadingComponent);
 
