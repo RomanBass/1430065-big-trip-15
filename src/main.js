@@ -111,17 +111,37 @@ document.querySelector('.trip-main__event-add-btn').addEventListener('click', (e
   tripPresenter.createPoint();
 });
 
-api.getPoints()
-  .then((serverPoints) => {
-    pointsModel.setOffers(possibleOffers);
-    pointsModel.setPoints(UpdateType.INIT, serverPoints);
-  })
-  .catch((err) => {
-    console.log(err);
-    pointsModel.setPoints(UpdateType.INIT, []);
-  });
+// api.getPoints()
+//   .then((serverPoints) => {
+//     pointsModel.setOffers(possibleOffers);
+//     pointsModel.setPoints(UpdateType.INIT, serverPoints);
+//   })
+//   .catch((err) => {
+//     console.log(err);
+//     pointsModel.setPoints(UpdateType.INIT, []);
+//   });
 
 const points = pointsModel.getPoints();
+
+api.getOffers()
+  .then((serverOffers) => {
+    pointsModel.setOffers(serverOffers);
+  })
+  .then(
+    api.getPoints()
+      .then((serverPoints) => {
+        pointsModel.setPoints(UpdateType.INIT, serverPoints);
+      })
+      .catch((err) => {
+        console.log(err);
+        pointsModel.setPoints(UpdateType.INIT, []);
+      }),
+  )
+  .catch((err) => {
+    console.log(err);
+  });
+
+//console.log(possibleOffers);
 
 export {points};
 //export {points, pointsModel};

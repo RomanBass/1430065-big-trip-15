@@ -37,7 +37,7 @@ export const AddFormData = { // данные для дефолтной точк�
   DESTINATION: {description: '', name: CITIES[0], pictures: []},
   ID: nanoid(),
   IS_FAVORITE: false,
-  OFFERS: [{title: 'Taxi-Option-2'}, {title: 'Taxi-Option-5'}],
+  OFFERS: [],
   TYPE: 'taxi',
 };
 

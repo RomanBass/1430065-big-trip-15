@@ -103,6 +103,14 @@ export default class Points extends Observer {
     delete adaptedPoint.isFavorite;
 
     return adaptedPoint;
+  }
 
+  static adaptOffersToClient(serverOffers) {
+    const adaptedOffers = {};
+    serverOffers.forEach((serverOffer) => {
+      adaptedOffers[serverOffer.type] = serverOffer.offers;
+    });
+
+    return adaptedOffers;
   }
 }
