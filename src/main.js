@@ -127,7 +127,7 @@ api.getOffers()
   .then((serverOffers) => {
     pointsModel.setOffers(serverOffers);
   })
-  .then(
+  .then(() => {
     api.getPoints()
       .then((serverPoints) => {
         pointsModel.setPoints(UpdateType.INIT, serverPoints);
@@ -135,8 +135,8 @@ api.getOffers()
       .catch((err) => {
         console.log(err);
         pointsModel.setPoints(UpdateType.INIT, []);
-      }),
-  )
+      });
+  })
   .catch((err) => {
     console.log(err);
   });
