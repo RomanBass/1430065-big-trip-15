@@ -32,7 +32,7 @@ export default class Point {
     const prevPointComponent = this._pointComponent;
     const prevEditFormComponent = this._editFormComponent;
 
-    this._pointComponent = new PointView(point);
+    this._pointComponent = new PointView(point, offers);
     this._editFormComponent = new EditFormView(point, offers);
 
     this._pointComponent.setPointRollupButtonClickHandler(this._handlePointToEditFormClick);

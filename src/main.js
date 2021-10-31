@@ -7,12 +7,13 @@ import TripPresenter from './presenter/trip.js';
 import PointsModel from './model/points.js';
 import FilterModel from './model/filter.js';
 import FilterPresenter from './presenter/filter.js';
-import { possibleOffers } from './mock/point.js';
+//import { possibleOffers } from './mock/point.js';
 import { MenuItem, UpdateType } from './utils/const.js';
 import StatisticsView from './view/statistics.js';
 import { getMoneyByTypeData, getPointsNumberByTypeData, getDurationByTypeData}
   from  './utils/statistics.js';
 import Api from './api.js';
+import { BlankPossibleOffers } from './utils/const.js';
 
 //const POINTS_COUNT = 5;
 const AUTHORIZATION = 'Basic df9df9df8sd8fg8h';
@@ -126,7 +127,14 @@ const points = pointsModel.getPoints();
 api.getOffers()
   .then((serverOffers) => {
     pointsModel.setOffers(serverOffers);
+    console.log(pointsModel.getOffers());
   })
+
+  .catch((err) => {
+    console.log(err);
+    pointsModel.setOffers(BlankPossibleOffers);
+  })
+
   .then(() => {
     api.getPoints()
       .then((serverPoints) => {
@@ -136,12 +144,7 @@ api.getOffers()
         console.log(err);
         pointsModel.setPoints(UpdateType.INIT, []);
       });
-  })
-  .catch((err) => {
-    console.log(err);
   });
-
-//console.log(possibleOffers);
 
 export {points};
 //export {points, pointsModel};

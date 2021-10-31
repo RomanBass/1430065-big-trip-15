@@ -1,19 +1,19 @@
 import dayjs from 'dayjs';
 import {nanoid} from 'nanoid';
-import { CITIES, TYPES, PHOTO_DESCRIPTIONS, OfferTitles, DESCRIPTION_SENTENCES } from '../utils/const.js';
+import { CITIES, TYPES, PHOTO_DESCRIPTIONS, DESCRIPTION_SENTENCES } from '../utils/const.js';
 import { getRandomInteger } from '../utils/common.js';
 
-const getPossibleOffers = (Titles) => { // формирует объект возможных опций из объекта заголовков типа OfferTitles
-  const Offers = JSON.parse(JSON.stringify(Titles));
-  for (const key in Offers) {
-    Offers[key].forEach((element) => {
-      Offers[key][Offers[key].indexOf(element)] = {title: Offers[key][Offers[key].indexOf(element)], price: getRandomInteger(50, 100)};
-    });
-  }
-  return Offers;
-};
+// const getPossibleOffers = (Titles) => { // формирует объект возможных опций из объекта заголовков типа OfferTitles
+//   const Offers = JSON.parse(JSON.stringify(Titles));
+//   for (const key in Offers) {
+//     Offers[key].forEach((element) => {
+//       Offers[key][Offers[key].indexOf(element)] = {title: Offers[key][Offers[key].indexOf(element)], price: getRandomInteger(50, 100)};
+//     });
+//   }
+//   return Offers;
+// };
 
-export const possibleOffers = (getPossibleOffers(OfferTitles));
+// export const possibleOffers = (getPossibleOffers(OfferTitles));
 
 export const getPictures = () => { // создание массива объектов фотографий с описаниями
   const pictures = [];
@@ -30,16 +30,16 @@ export const getPictures = () => { // создание массива объек
   return pictures;
 };
 
-export const getOffers = (type) => { // создание массива объектов опций
-  const offers = [];
-  possibleOffers[type].forEach((possibleOffer) => {
-    const marker = getRandomInteger(0, 1);
-    if (marker) {
-      offers.push(possibleOffer);
-    }
-  });
-  return offers;
-};
+// export const getOffers = (type) => { // создание массива объектов опций
+//   const offers = [];
+//   possibleOffers[type].forEach((possibleOffer) => {
+//     const marker = getRandomInteger(0, 1);
+//     if (marker) {
+//       offers.push(possibleOffer);
+//     }
+//   });
+//   return offers;
+// };
 
 export const getDescription = () => { // создание описания соединением случайно выбираемых предложений из их массива
   let description = '';

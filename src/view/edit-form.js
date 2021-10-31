@@ -1,4 +1,3 @@
-import {getOffers} from '../mock/point.js';
 import {points} from '../main.js';
 import {getCitiesUniqueNames} from '../utils/route.js';
 import { BlankPoint } from '../utils/const.js';
@@ -10,12 +9,14 @@ import dayjs from 'dayjs';
 
 const RADIX_10 = 10; // основание десятичной системы исчисления
 
-const createDataListTemplate = (cityName) => `<option value="${cityName}"></option>`;//возвращает образец ДОМ элемента в datalist наименований городов
+const createDataListTemplate = (cityName) => `<option value="${cityName}"></option>`;
+//...возвращает образец ДОМ элемента в datalist наименований городов
 
 const createOptionTemplate = (offer, isChecked) => { //возвращает образец ДОМ элемента опции
   const {title, price} = offer;
   return `<div class="event__offer-selector">
-  <input class="event__offer-checkbox  visually-hidden" id="event-offer-${title}" type="checkbox" name="event-offer-${title}" ${isChecked}>
+  <input class="event__offer-checkbox  visually-hidden" id="event-offer-${title}" type="checkbox"
+  name="event-offer-${title}" ${isChecked}>
   <label class="event__offer-label" for="event-offer-${title}">
     <span class="event__offer-title">${title}</span>
     &plus;&euro;&nbsp;
@@ -24,7 +25,8 @@ const createOptionTemplate = (offer, isChecked) => { //возвращает об
 </div>`;
 };
 
-const createPhotoTemplate = (picture) => `<img class="event__photo" src="${picture.src}" alt="${picture.description}">`;  //возвращает образец ДОМ элемента фотографии
+const createPhotoTemplate = (picture) => `<img class="event__photo" src="${picture.src}"
+alt="${picture.description}">`;  //возвращает образец ДОМ элемента фотографии
 
 const createEditFormTemplate = (point = BlankPoint, possibleOffers) => {
   const {destination, basePrice, type, dateFrom, dateTo, offers} = point;
@@ -49,7 +51,8 @@ const createEditFormTemplate = (point = BlankPoint, possibleOffers) => {
 
       let isChecked = ''; // флаг - чекнуто ли offer
 
-      const checkedOffer = offers.find((offer) => option.title === offer.title); // находит и присваивает offer, совпадающий по названию с опцией
+      const checkedOffer = offers.find((offer) => option.title === offer.title);
+      // ...находит и присваивает offer, совпадающий по названию с опцией
 
       if (checkedOffer) {
         isChecked = 'checked';
@@ -211,7 +214,7 @@ export default class EditForm extends SmartView {
     this._data = point; // this._point заменён на this._data чтобы отнаследоваться от SmartView
     this._dateFromPicker = null;
     this._dateToPicker = null;
-    this._offers = possibleOffers;
+    this._possibleOffers = possibleOffers;
     this._citiesNames = getCitiesUniqueNames(points);
 
     this._editFormRollupButtonClickHandler = this._editFormRollupButtonClickHandler.bind(this);
@@ -231,7 +234,7 @@ export default class EditForm extends SmartView {
   }
 
   getTemplate() {
-    return createEditFormTemplate(this._data, this._offers);
+    return createEditFormTemplate(this._data,  this._possibleOffers);
   }
 
   _editFormRollupButtonClickHandler(evt) {
@@ -281,13 +284,14 @@ export default class EditForm extends SmartView {
   _typeFieldsetChangeHandler(evt) { //обработчик fieldset по изменению типа точки
     this.updateData({
       type: evt.target.value,
-      offers: getOffers(evt.target.value),
+      offers:  this._possibleOffers[evt.target.value],
     });
   }
 
   _destinationInputChangeHandler(evt) { //обработчик input ввода названия города
 
-    const availableCity = this._citiesNames.find((cityName) => cityName === evt.target.value); // находит в datalist введёный город и присваивает данной константе
+    const availableCity = this._citiesNames.find((cityName) => cityName === evt.target.value);
+    // ...находит в datalist введёный город и присваивает данной константе
 
     if (availableCity) { // Если введёный город есть в datalist, то производит изменение.
       this.updateData({  // Иначе - выдаёт сообщение setCustomValidity
@@ -301,7 +305,8 @@ export default class EditForm extends SmartView {
   }
 
   _basePriceInputChangeHandler(evt) { //обработчик input ввода стоимости
-    this.updateData({basePrice: parseInt(evt.target.value, RADIX_10)}); //обновляются данные точки в части стоимости
+    this.updateData({basePrice: parseInt(evt.target.value, RADIX_10)});
+    //...обновляются данные точки в части стоимости
   }
 
   _offersChangeHandler(evt) { //обработчик выбора опций
@@ -314,7 +319,8 @@ export default class EditForm extends SmartView {
       const clickedOptionPrice = evt.target.parentElement.querySelector('label span:last-child').textContent; //достаёт из раметки цену кликуемой опции
       const ClickedOption = {title: clickedOptionTitle, price: parseInt(clickedOptionPrice, RADIX_10)}; //создаёт объект кликнутой опции
 
-      this._data.offers.unshift(ClickedOption); //добавляет объект кликнутой опции в массив опций данной точки
+      this._data.offers.unshift(ClickedOption);
+      //...добавляет объект кликнутой опции в массив опций данной точки
     }
 
     this.updateData({offers: this._data.offers}); //обновляются данные точки в части опций

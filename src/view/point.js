@@ -11,15 +11,21 @@ const createChosenOptionTemplate = (offer) => {
 </li>`;
 };
 
-const createPointTemplate = (point) => {
+const createPointTemplate = (point, possibleOffers) => {
   const {basePrice, dateFrom, dateTo, type, destination, isFavorite, offers} = point;
   const {name} = destination;
 
-  const getChosenOptionsTemplate = (offersCollection) =>  { //возвращает ДОМ элемент возможных опции для точки типа type
+  const getChosenOptionsTemplate = (offersCollection) =>  { /*возвращает ДОМ элемент возможных
+опции для точки типа type*/
     let ChosenOptionsTemplate = '';
-    offersCollection.forEach((offer) => {
-      ChosenOptionsTemplate += createChosenOptionTemplate(offer);
-    });
+
+    if (possibleOffers[type].length) {
+      offersCollection.forEach((offer) => {
+        ChosenOptionsTemplate += createChosenOptionTemplate(offer);
+
+      });
+    }
+
     return ChosenOptionsTemplate;
   };
 
@@ -57,16 +63,17 @@ const createPointTemplate = (point) => {
 };
 
 export default class Point extends AbstractView {
-  constructor(point) {
+  constructor(point, possibleOffers) {
     super();
     this._point = point;
+    this._possibleOffers = possibleOffers;
 
     this._pointRollupButtonClickHandler = this._pointRollupButtonClickHandler.bind(this);
     this._favoriteButtonClickHandler = this._favoriteButtonClickHandler.bind(this);
   }
 
   getTemplate() {
-    return createPointTemplate(this._point);
+    return createPointTemplate(this._point, this._possibleOffers);
   }
 
   _pointRollupButtonClickHandler(evt) {

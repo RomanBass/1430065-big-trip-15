@@ -5,17 +5,16 @@ export const CITIES = ['London', 'Paris', 'Beijing', 'Tokyo', 'Melbourne'];
 export const TYPES = ['taxi', 'bus', 'train', 'ship', 'transport', 'drive', 'flight', 'check-in', 'sightseeing', 'restaurant'];
 export const PHOTO_DESCRIPTIONS = ['Beautiful Mountain Sea', 'Island archipelago', 'River Delta', 'Desert Storm', 'Snow Mountains'];
 
-export const OfferTitles = {
-  taxi: ['Taxi-Option-1', 'Taxi-Option-2', 'Taxi-Option-3', 'Taxi-Option-4', 'Taxi-Option-5'],
+export const BlankPossibleOffers = {
   bus: [],
-  train: ['Train-Option-1', 'Train-Option-2', 'Train-Option-3', 'Train-Option-4', 'Train-Option-5'],
-  ship: [],
-  transport: ['Transport-Option-1', 'Transport-Option-2', 'Transport-Option-3', 'Transport-Option-4', 'Transport-Option-5'],
-  drive: [],
-  flight: ['Flight-Option-1', 'Flight-Option-2', 'Flight-Option-3', 'Flight-Option-4', 'Flight-Option-5'],
   'check-in': [],
-  sightseeing: ['Sightseeng-Option-1', 'Sightseeng-Option-2', 'Sightseeng-Option-3', 'Sightseeng-Option-4', 'Sightseeng-Option-5'],
-  restaurant: ['Restaurant-Option-1', 'Restaurant-Option-2', 'Restaurant-Option-3', 'Restaurant-Option-4', 'Restaurant-Option-5'],
+  drive: [],
+  flight: [],
+  restaurant: [],
+  ship: [],
+  sightseeing: [],
+  taxi: [],
+  train: [],
 };
 
 export const DESCRIPTION_SENTENCES = [
