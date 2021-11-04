@@ -136,6 +136,18 @@ api.getOffers()
   })
 
   .then(() => {
+    api.getDestinations()
+      .then((serverDestinations) => {
+        pointsModel.setDestinations(serverDestinations);
+        console.log(pointsModel.getDestinations());
+      })
+      .catch((err) => {
+        console.log(err);
+        //pointsModel.setPoints(UpdateType.INIT, []);
+      });
+  })
+
+  .then(() => {
     api.getPoints()
       .then((serverPoints) => {
         pointsModel.setPoints(UpdateType.INIT, serverPoints);

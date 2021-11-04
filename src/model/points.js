@@ -6,6 +6,7 @@ export default class Points extends Observer {
     super();
     this._points = [];
     this._offers = [];
+    this._destinations = [];
   }
 
   setPoints(updateType, points) {
@@ -23,6 +24,14 @@ export default class Points extends Observer {
 
   getOffers() {
     return this._offers;
+  }
+
+  setDestinations(destinations) {
+    this._destinations = destinations;
+  }
+
+  getDestinations() {
+    return this._destinations;
   }
 
   updatePoint(updateType, update) {
@@ -65,7 +74,7 @@ export default class Points extends Observer {
     this._notify(updateType);
   }
 
-  static adaptToClient(point) {
+  static adaptPointsToClient(point) {
     const adaptedPoint = Object.assign(
       {},
       point,
@@ -85,7 +94,7 @@ export default class Points extends Observer {
     return adaptedPoint;
   }
 
-  static adaptToServer(point) {
+  static adaptPointsToServer(point) {
     const adaptedPoint = Object.assign(
       {},
       point,
