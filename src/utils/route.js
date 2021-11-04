@@ -1,10 +1,20 @@
 import dayjs from 'dayjs';
+import {ARRAY_INDEX_ZERO, ARRAY_INDEX_ONE} from './statistics.js';
 
-export const sortByDateFrom = (pointOne, pointTwo) => dayjs(pointOne.dateFrom).diff(dayjs(pointTwo.dateFrom));
+const INITIAL_OPTIONS_TOTAL_PRICE = 0;
+const ARRAY_INDEX_TWO = 2;
+const ARRAY_LAST_INDEX_SHIFT = 1;
+const POINTS_NUMBER_ONE = 1;
+const POINTS_NUMBER_TWO = 2;
+const POINTS_NUMBER_THREE = 3;
+
+export const sortByDateFrom = (pointOne, pointTwo) =>
+  dayjs(pointOne.dateFrom).diff(dayjs(pointTwo.dateFrom));
 
 export const sortByPrice = (pointOne, pointTwo) => {
 
-  if (pointTwo.basePrice === pointOne.basePrice) { // если у точек одинаковая цена, то они сортируются по дате-времени начала
+  if (pointTwo.basePrice === pointOne.basePrice) {
+  // если у точек одинаковая цена, то они сортируются по дате-времени начала
     return dayjs(pointOne.dateFrom).diff(dayjs(pointTwo.dateFrom));
   }
 
@@ -22,14 +32,20 @@ export const getRouteName = (points) => { // вернуть имя маршру�
 
   if (points.length) {
     const pointsByDateFrom = points.slice().sort(sortByDateFrom);
-    routeName = `${pointsByDateFrom[0].destination.name} ... ${pointsByDateFrom[pointsByDateFrom.length - 1].destination.name}` ;
+    routeName = `${pointsByDateFrom[ARRAY_INDEX_ZERO].destination.name} ...
+    ${pointsByDateFrom[pointsByDateFrom.length - ARRAY_LAST_INDEX_SHIFT].destination.name}` ;
 
-    if (pointsByDateFrom.length === 3) {
-      routeName = `${pointsByDateFrom[0].destination.name} &mdash; ${pointsByDateFrom[1].destination.name}  &mdash; ${pointsByDateFrom[2].destination.name}`;
-    } else if (pointsByDateFrom.length === 2) {
-      routeName = `${pointsByDateFrom[0].destination.name} &mdash; ${pointsByDateFrom[1].destination.name}`;
-    } else if (pointsByDateFrom.length === 1) {
-      routeName = `${pointsByDateFrom[0].destination.name}`;
+    if (pointsByDateFrom.length === POINTS_NUMBER_THREE) {
+      routeName = `${pointsByDateFrom[ARRAY_INDEX_ZERO].destination.name} &mdash;
+      ${pointsByDateFrom[ARRAY_INDEX_ONE].destination.name}  &mdash;
+      ${pointsByDateFrom[ARRAY_INDEX_TWO].destination.name}`;
+
+    } else if (pointsByDateFrom.length === POINTS_NUMBER_TWO) {
+      routeName = `${pointsByDateFrom[ARRAY_INDEX_ZERO].destination.name} &mdash;
+      ${pointsByDateFrom[ARRAY_INDEX_ONE].destination.name}`;
+
+    } else if (pointsByDateFrom.length === POINTS_NUMBER_ONE) {
+      routeName = `${pointsByDateFrom[ARRAY_INDEX_ZERO].destination.name}`;
     }
 
   }
@@ -42,10 +58,16 @@ export const getRouteDates = (points) => { // вернуть время марш
 
   if (points.length) {
     const pointsByDateFrom = points.slice().sort(sortByDateFrom);
-    routeDates = `${pointsByDateFrom[0].dateFrom.format('MMM DD')} &nbsp;&mdash;&nbsp ${pointsByDateFrom[pointsByDateFrom.length - 1].dateTo.format('MMM DD')}`;
+    routeDates = `${pointsByDateFrom[ARRAY_INDEX_ZERO].dateFrom.format('MMM DD')}
+    &nbsp;&mdash;&nbsp
+    ${pointsByDateFrom[pointsByDateFrom.length - ARRAY_LAST_INDEX_SHIFT].dateTo.format('MMM DD')}`;
 
-    if (pointsByDateFrom[0].dateFrom.format('MMM') === pointsByDateFrom[pointsByDateFrom.length - 1].dateTo.format('MMM')) {
-      routeDates = `${pointsByDateFrom[0].dateFrom.format('MMM DD')} &nbsp;&mdash;&nbsp ${pointsByDateFrom[pointsByDateFrom.length - 1].dateTo.format('DD')}`;
+    if (pointsByDateFrom[ARRAY_INDEX_ZERO].dateFrom.format('MMM') ===
+        pointsByDateFrom[pointsByDateFrom.length - ARRAY_LAST_INDEX_SHIFT].dateTo.format('MMM')) {
+
+      routeDates = `${pointsByDateFrom[ARRAY_INDEX_ZERO].dateFrom.format('MMM DD')}
+      &nbsp;&mdash;&nbsp
+      ${pointsByDateFrom[pointsByDateFrom.length - ARRAY_LAST_INDEX_SHIFT].dateTo.format('DD')}`;
     }
 
   }
@@ -53,24 +75,28 @@ export const getRouteDates = (points) => { // вернуть время марш
   return routeDates;
 };
 
-export const getRoutePrice = (points) => { // вернуть стоимость маршрута
-  let routePrice = 0;
+export const getRoutePrice = (points, possibleOffers) => { // вернуть стоимость маршрута
+  let routePrice = INITIAL_OPTIONS_TOTAL_PRICE;
   points.forEach((point) => {
     routePrice += point.basePrice; // добавление стоимости поездки
-    point.offers.forEach((offer) => { // добавление стоимости выбранных опций
-      routePrice += offer.price;
-    });
+
+    if (possibleOffers[point.type].length) {
+    //...в случае, если опции не будут загружены с сервера, то их стоимость из точек не добавляется
+      point.offers.forEach((offer) => { // добавление стоимости выбранных опций
+        routePrice += offer.price;
+      });
+    }
   });
   return routePrice;
 };
 
-export const getCitiesUniqueNames = (points) => { // выдаёт отсортированный массив уникальных названий городов из массива точек маршрута
+export const getCitiesUniqueNames = (points) => {
+  // выдаёт отсортированный массив уникальных названий городов из массива точек маршрута
   let citiesNames = new Set();
   points.forEach((point) => {
     citiesNames.add(point.destination.name);
   });
-  citiesNames = Array.from(citiesNames).sort(); // преобразовывает сет в массив, чтобы отсортировать данные по алфавиту
+  citiesNames = Array.from(citiesNames).sort();
+  // преобразовывает сет в массив, чтобы отсортировать данные по алфавиту
   return citiesNames;
 };
-
-

@@ -56,7 +56,7 @@ render(tripElement, tripInfo, RenderPosition.AFTERBEGIN);
 pointsModel.addObserver(() => {
   tripInfo.updateData(
     {
-      tripPrice: getRoutePrice(pointsModel.getPoints()),
+      tripPrice: getRoutePrice(pointsModel.getPoints(), pointsModel.getOffers()),
       tripDate: getRouteDates(pointsModel.getPoints()),
       tripName: getRouteName(pointsModel.getPoints()),
     },
@@ -127,7 +127,7 @@ const points = pointsModel.getPoints();
 api.getOffers()
   .then((serverOffers) => {
     pointsModel.setOffers(serverOffers);
-    console.log(pointsModel.getOffers());
+    //console.log(pointsModel.getOffers());
   })
 
   .catch((err) => {
