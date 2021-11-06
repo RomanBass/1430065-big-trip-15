@@ -28,31 +28,40 @@ const createOptionTemplate = (offer, isChecked) => { //возвращает об
 const createPhotoTemplate = (picture) => `<img class="event__photo" src="${picture.src}"
 alt="${picture.description}">`;  //возвращает образец ДОМ элемента фотографии
 
-const createEditFormTemplate = (point = BlankPoint, possibleOffers) => {
+const createEditFormTemplate = (point = BlankPoint, possibleOffers, possibleDestinations) => {
   const {destination, basePrice, type, dateFrom, dateTo, offers} = point;
   const {description, name, pictures} = destination;
 
-  const getDatalistContentTemplate = (pointsCollection) => {
+  const getDatalistContentTemplate = (serverDestinations) => {
     let dataListContentTemplate = '';
-    getCitiesUniqueNames(pointsCollection).forEach((city) => {
-      dataListContentTemplate += createDataListTemplate(city);
+    serverDestinations.forEach((serverDestination) => {
+      dataListContentTemplate += createDataListTemplate(serverDestination.name);
     });
     return dataListContentTemplate;
   };
+
+  // const getDatalistContentTemplate = (pointsCollection) => {
+  //   let dataListContentTemplate = '';
+  //   getCitiesUniqueNames(pointsCollection).forEach((city) => {
+  //     dataListContentTemplate += createDataListTemplate(city);
+  //   });
+  //   return dataListContentTemplate;
+  // };
 
   let isOffer = ''; // переменная скрывает блок с опциями, если опции отсутствуют для этой точки
   if (!possibleOffers[type].length){
     isOffer = 'visually-hidden';
   }
 
-  const getOptionsTemplate = (possibleOffersCollection) =>  { //возвращает ДОМ элемент возможных опции для точки типа type
+  const getOptionsTemplate = (possibleOffersCollection) =>  {
+    //...возвращает ДОМ элемент возможных опции для точки типа type
     let OptionsTemplate = '';
     possibleOffersCollection[type].forEach((option) => {
 
       let isChecked = ''; // флаг - чекнуто ли offer
 
       const checkedOffer = offers.find((offer) => option.title === offer.title);
-      // ...находит и присваивает offer, совпадающий по названию с опцией
+      //...находит и присваивает offer, совпадающий по названию с опцией
 
       if (checkedOffer) {
         isChecked = 'checked';
@@ -72,23 +81,28 @@ const createEditFormTemplate = (point = BlankPoint, possibleOffers) => {
     return PhotoTemplate;
   };
 
-  let isPicture = ''; //переменная скрывает блок фотографий со скролом, если фотографии отсутствуют в данных точки
+  let isPicture = '';
+  //...переменная скрывает блок фотографий со скролом, если фотографии отсутствуют в данных точки
   if (!pictures.length) {
     isPicture = 'visually-hidden';
   }
 
-  let isDestinationInfo = ''; //переменная скрывает блок информации о пункте назначения, если для него отсутствует описание и фотографии
+  let isDestinationInfo = '';
+  //...переменная скрывает блок информации о пункте назначения,
+  //...если для него отсутствует описание и фотографии
   if (!pictures.length && description === '') {
     isDestinationInfo = 'visually-hidden';
   }
 
-  const isEditForm = { // переменная для определения названия кнопки ресет и нужна ли стрелка закрытия формы
+  const isEditForm = {
+    //...переменная для определения названия кнопки ресет и нужна ли стрелка закрытия формы
     ROLLUP_BUTTON_CLASS: 'event__rollup-btn',
     RESET_BUTTON_NAME: 'Delete',
     ADD_FORM_CLASS: '',
   };
 
-  if (point.id === BlankPoint.id) { // удаляет стрелку и переименовывает кнопку ресет, если это форма добавления
+  if (point.id === BlankPoint.id) {
+    //...удаляет стрелку и переименовывает кнопку ресет, если это форма добавления
     isEditForm.ROLLUP_BUTTON_CLASS = 'visually-hidden';
     isEditForm.RESET_BUTTON_NAME = 'Cancel';
     isEditForm.ADD_FORM_CLASS = '';
@@ -100,7 +114,8 @@ const createEditFormTemplate = (point = BlankPoint, possibleOffers) => {
       <div class="event__type-wrapper">
         <label class="event__type  event__type-btn" for="event-type-toggle-1">
           <span class="visually-hidden">Choose event type</span>
-          <img class="event__type-icon" width="17" height="17" src="img/icons/${type}.png" alt="Event type icon">
+          <img class="event__type-icon" width="17" height="17" src="img/icons/${type}.png"
+          alt="Event type icon">
         </label>
         <input class="event__type-toggle  visually-hidden" id="event-type-toggle-1" type="checkbox">
 
@@ -166,7 +181,7 @@ const createEditFormTemplate = (point = BlankPoint, possibleOffers) => {
           ${type}
         </label>
         <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${name}" list="destination-list-1">
-        <datalist id="destination-list-1">${getDatalistContentTemplate(points)}</datalist>
+        <datalist id="destination-list-1">${getDatalistContentTemplate(possibleDestinations)}</datalist>
       </div>
 
       <div class="event__field-group  event__field-group--time">
@@ -209,12 +224,13 @@ const createEditFormTemplate = (point = BlankPoint, possibleOffers) => {
 };
 
 export default class EditForm extends SmartView {
-  constructor(point = BlankPoint, possibleOffers) {
+  constructor(point = BlankPoint, possibleOffers, possibleDestinations) {
     super();
     this._data = point; // this._point заменён на this._data чтобы отнаследоваться от SmartView
     this._dateFromPicker = null;
     this._dateToPicker = null;
     this._possibleOffers = possibleOffers;
+    this._possibleDestinations = possibleDestinations;
     this._citiesNames = getCitiesUniqueNames(points);
 
     this._editFormRollupButtonClickHandler = this._editFormRollupButtonClickHandler.bind(this);
@@ -234,7 +250,7 @@ export default class EditForm extends SmartView {
   }
 
   getTemplate() {
-    return createEditFormTemplate(this._data,  this._possibleOffers);
+    return createEditFormTemplate(this._data,  this._possibleOffers, this._possibleDestinations);
   }
 
   _editFormRollupButtonClickHandler(evt) {
@@ -258,7 +274,8 @@ export default class EditForm extends SmartView {
 
   setEditFormSubmitButtonClickHandler(callback) {
     this._callback.editFormSubmitButtonClick = callback;
-    this.getElement().querySelector('form').addEventListener('submit', this._editFormSubmitButtonClickHandler);
+    this.getElement().querySelector('form')
+      .addEventListener('submit', this._editFormSubmitButtonClickHandler);
   }
 
   _deletePointClickHandler(evt) {
@@ -268,17 +285,20 @@ export default class EditForm extends SmartView {
 
   setDeletePointClickHandler(callback) {
     this._callback.deletePointClickHandler = callback;
-    this.getElement().querySelector('.event__reset-btn').addEventListener('click', this._deletePointClickHandler);
+    this.getElement().querySelector('.event__reset-btn')
+      .addEventListener('click', this._deletePointClickHandler);
   }
 
-  _addFormCancelHandler(evt) { // добавляет обработчик на кнопку Cancel для удаления формы добавления
+  _addFormCancelHandler(evt) {
+    //...добавляет обработчик на кнопку Cancel для удаления формы добавления
     evt.preventDefault();
     this._callback.addFormCancelHandler();
   }
 
   setAddFormCancelHandler(callback) {
     this._callback.addFormCancelHandler = callback;
-    this.getElement().querySelector('.event__reset-btn').addEventListener('click', this._addFormCancelHandler);
+    this.getElement().querySelector('.event__reset-btn')
+      .addEventListener('click', this._addFormCancelHandler);
   }
 
   _typeFieldsetChangeHandler(evt) { //обработчик fieldset по изменению типа точки
@@ -290,15 +310,21 @@ export default class EditForm extends SmartView {
 
   _destinationInputChangeHandler(evt) { //обработчик input ввода названия города
 
-    const availableCity = this._citiesNames.find((cityName) => cityName === evt.target.value);
-    // ...находит в datalist введёный город и присваивает данной константе
+    const NewDestination =
+    this._possibleDestinations.find((destination) => destination.name === evt.target.value);
+    //...находит в datalist введёный город и присваивает данной константе
 
-    if (availableCity) { // Если введёный город есть в datalist, то производит изменение.
+    if (NewDestination) { // Если введёный город есть в datalist, то производит изменение.
       this.updateData({  // Иначе - выдаёт сообщение setCustomValidity
-        destination: {description: getDescription(), name: evt.target.value, pictures: getPictures()},
+        destination: {
+          description: NewDestination.description,
+          name: NewDestination.name,
+          pictures: NewDestination.pictures,
+        },
       });
     } else {
-      this.getElement().querySelector('.event__input--destination').setCustomValidity('This city is not available, please select one from the popup list.');
+      this.getElement().querySelector('.event__input--destination')
+        .setCustomValidity('This city is not available, please select one from the popup list.');
       this.getElement().querySelector('.event__input--destination').reportValidity();
     }
 

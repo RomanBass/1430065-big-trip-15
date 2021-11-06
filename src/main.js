@@ -14,6 +14,7 @@ import { getMoneyByTypeData, getPointsNumberByTypeData, getDurationByTypeData}
   from  './utils/statistics.js';
 import Api from './api.js';
 import { BlankPossibleOffers } from './utils/const.js';
+import { getDestinationsFromPoints } from './utils/route.js';
 
 //const POINTS_COUNT = 5;
 const AUTHORIZATION = 'Basic df9df9df8sd8fg8h';
@@ -129,10 +130,21 @@ api.getOffers()
     pointsModel.setOffers(serverOffers);
     //console.log(pointsModel.getOffers());
   })
-
   .catch((err) => {
     console.log(err);
     pointsModel.setOffers(BlankPossibleOffers);
+  })
+
+  .then(() => {
+    api.getPoints()
+      .then((serverPoints) => {
+        pointsModel.setPoints(UpdateType.INIT, serverPoints);
+        console.log(pointsModel.getPoints());
+      })
+      .catch((err) => {
+        console.log(err);
+        pointsModel.setPoints(UpdateType.INIT, []);
+      });
   })
 
   .then(() => {
@@ -140,21 +152,14 @@ api.getOffers()
       .then((serverDestinations) => {
         pointsModel.setDestinations(serverDestinations);
         console.log(pointsModel.getDestinations());
+        console.log(pointsModel.getPoints());
       })
       .catch((err) => {
         console.log(err);
-        //pointsModel.setPoints(UpdateType.INIT, []);
-      });
-  })
-
-  .then(() => {
-    api.getPoints()
-      .then((serverPoints) => {
-        pointsModel.setPoints(UpdateType.INIT, serverPoints);
-      })
-      .catch((err) => {
-        console.log(err);
-        pointsModel.setPoints(UpdateType.INIT, []);
+        //pointsModel.setDestinations(getDestinationsFromPoints(pointsModel.getPoints()));
+        //console.log(getDestinationsFromPoints(pointsModel.getPoints()));
+        console.log(pointsModel.getPoints());
+        // console.log(pointsModel.getDestinations());
       });
   });
 
