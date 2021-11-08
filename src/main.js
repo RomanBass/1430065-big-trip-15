@@ -16,23 +16,8 @@ import Api from './api.js';
 import { BlankPossibleOffers } from './utils/const.js';
 import { getDestinationsFromPoints } from './utils/route.js';
 
-//const POINTS_COUNT = 5;
 const AUTHORIZATION = 'Basic df9df9df8sd8fg8h';
 const END_POINT = 'https://15.ecmascript.pages.academy/big-trip';
-
-//const points = new Array(POINTS_COUNT).fill().map(generatePoint); // массив точек маршрута
-//console.log(points);
-//const api = new Api(END_POINT, AUTHORIZATION);
-
-// api.getPoints().then((serverPoints) => {
-//   console.log(serverPoints);
-// });
-
-
-// pointsModel.setPoints(points);
-// pointsModel.setOffers(possibleOffers);
-//console.log(pointsModel.getPoints());
-
 
 const siteHeaderElement = document.querySelector('.page-header'); // крупный блок
 const menuElement = siteHeaderElement.querySelector('.trip-controls__navigation'); // контейнеры...
@@ -113,22 +98,11 @@ document.querySelector('.trip-main__event-add-btn').addEventListener('click', (e
   tripPresenter.createPoint();
 });
 
-// api.getPoints()
-//   .then((serverPoints) => {
-//     pointsModel.setOffers(possibleOffers);
-//     pointsModel.setPoints(UpdateType.INIT, serverPoints);
-//   })
-//   .catch((err) => {
-//     console.log(err);
-//     pointsModel.setPoints(UpdateType.INIT, []);
-//   });
-
 const points = pointsModel.getPoints();
 
 api.getOffers()
-  .then((serverOffers) => {
-    pointsModel.setOffers(serverOffers);
-    //console.log(pointsModel.getOffers());
+  .then((offersFromServer) => {
+    pointsModel.setOffers(offersFromServer);
   })
   .catch((err) => {
     console.log(err);
@@ -136,32 +110,29 @@ api.getOffers()
   })
 
   .then(() => {
-    api.getPoints()
-      .then((serverPoints) => {
-        pointsModel.setPoints(UpdateType.INIT, serverPoints);
-        console.log(pointsModel.getPoints());
-      })
-      .catch((err) => {
-        console.log(err);
-        pointsModel.setPoints(UpdateType.INIT, []);
-      });
-  })
-
-  .then(() => {
     api.getDestinations()
       .then((serverDestinations) => {
         pointsModel.setDestinations(serverDestinations);
-        console.log(pointsModel.getDestinations());
-        console.log(pointsModel.getPoints());
       })
       .catch((err) => {
         console.log(err);
-        //pointsModel.setDestinations(getDestinationsFromPoints(pointsModel.getPoints()));
-        //console.log(getDestinationsFromPoints(pointsModel.getPoints()));
-        console.log(pointsModel.getPoints());
-        // console.log(pointsModel.getDestinations());
+      })
+
+      .then(() => {
+        api.getPoints()
+          .then((pointsFromServer) => {
+
+            if (!pointsModel.getDestinations().length) {
+              pointsModel.setDestinations(getDestinationsFromPoints(pointsFromServer));
+            }
+
+            pointsModel.setPoints(UpdateType.INIT, pointsFromServer);
+          })
+          .catch((err) => {
+            console.log(err);
+            pointsModel.setPoints(UpdateType.INIT, []);
+          });
       });
   });
 
 export {points};
-//export {points, pointsModel};

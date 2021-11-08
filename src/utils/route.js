@@ -102,12 +102,11 @@ export const getCitiesUniqueNames = (points) => {
 };
 
 export const getDestinationsFromPoints = (points) => {
-  // выдаёт отсортированный массив уникальных объектов пунктов назначения из массива точек маршрута
+  //...создаёт массив объектов пунктов назначения из массива точек маршрута
   const destinationsFromPoints = [];
   points.forEach((point) => {
     destinationsFromPoints.push(point.destination);
   });
-  //destinationsFromPoints = Array.from(destinationsFromPoints).sort();
-  // преобразовывает сет в массив, чтобы отсортировать данные по алфавиту
+
   return destinationsFromPoints;
 };
