@@ -59,7 +59,8 @@ export default class Trip {
       this._renderEventsList();
     }
 
-    this._pointNewPresenter.init(BlankPoint, this._pointsModel.getOffers());
+    this._pointNewPresenter.init(BlankPoint, this._pointsModel.getOffers(),
+      this._pointsModel.getDestinations());
 
     remove(this._noPointComponent);
   }

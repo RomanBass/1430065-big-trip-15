@@ -100,6 +100,11 @@ document.querySelector('.trip-main__event-add-btn').addEventListener('click', (e
 
 const points = pointsModel.getPoints();
 
+// Promise
+//   .all([api.getOffers(), api.getDestinations(), api.getPoints()])
+//   .then((value) => console.log(value));
+
+
 api.getOffers()
   .then((offersFromServer) => {
     pointsModel.setOffers(offersFromServer);

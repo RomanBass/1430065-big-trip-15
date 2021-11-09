@@ -13,13 +13,13 @@ export default class PointNew {
     this._handleAddFormCancel = this._handleAddFormCancel.bind(this);
   }
 
-  init(point, offers) {
+  init(point, offers, destinations) {
 
     if (this._editFormComponent !== null) { // чтобы не отрисовывалось две формы добавления
       return;
     }
 
-    this._editFormComponent = new EditFormView(point, offers);
+    this._editFormComponent = new EditFormView(point, offers, destinations);
 
     this._editFormComponent.setEditFormSubmitButtonClickHandler(this._handleEditFormSubmit);
     this._editFormComponent.setAddFormCancelHandler(this._handleAddFormCancel);

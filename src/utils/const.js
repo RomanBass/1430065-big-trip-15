@@ -86,3 +86,9 @@ export const MenuItem = {
   TABLE: 'table',
   STATISTICS: 'stats',
 };
+
+export const blankPossibleDestinations = [{
+  name: 'London',
+  description: 'London is the capital of the UK',
+  pictures: {src: '', description: ''},
+}];

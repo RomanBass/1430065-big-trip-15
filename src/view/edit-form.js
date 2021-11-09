@@ -1,7 +1,6 @@
 import {points} from '../main.js';
 import {getCitiesUniqueNames} from '../utils/route.js';
-import { BlankPoint } from '../utils/const.js';
-import { getDescription, getPictures } from '../mock/point.js';
+import { BlankPoint, blankPossibleDestinations } from '../utils/const.js';
 import SmartView from './smart.js';
 import flatpickr from 'flatpickr';
 import '../../node_modules/flatpickr/dist/flatpickr.min.css';
@@ -28,7 +27,8 @@ const createOptionTemplate = (offer, isChecked) => { //возвращает об
 const createPhotoTemplate = (picture) => `<img class="event__photo" src="${picture.src}"
 alt="${picture.description}">`;  //возвращает образец ДОМ элемента фотографии
 
-const createEditFormTemplate = (point = BlankPoint, possibleOffers, possibleDestinations) => {
+const createEditFormTemplate = (
+  point = BlankPoint,   possibleOffers, possibleDestinations = blankPossibleDestinations) => {
   const {destination, basePrice, type, dateFrom, dateTo, offers} = point;
   const {description, name, pictures} = destination;
 
@@ -39,14 +39,6 @@ const createEditFormTemplate = (point = BlankPoint, possibleOffers, possibleDest
     });
     return dataListContentTemplate;
   };
-
-  // const getDatalistContentTemplate = (pointsCollection) => {
-  //   let dataListContentTemplate = '';
-  //   getCitiesUniqueNames(pointsCollection).forEach((city) => {
-  //     dataListContentTemplate += createDataListTemplate(city);
-  //   });
-  //   return dataListContentTemplate;
-  // };
 
   let isOffer = ''; // переменная скрывает блок с опциями, если опции отсутствуют для этой точки
   if (!possibleOffers[type].length){
@@ -261,7 +253,8 @@ export default class EditForm extends SmartView {
   setEditFormRollupButtonClickHandler(callback) {
 
     const editRollupButton = this.getElement().querySelector('.event__rollup-btn');
-    if (editRollupButton !== null) { // чтоб не выдавало ошибку addEventLister от null при отрисовке формы добавления
+    if (editRollupButton !== null) {
+      //...чтоб не выдавало ошибку addEventLister от null при отрисовке формы добавления
       this._callback.editFormRollupButtonClick = callback;
       editRollupButton.addEventListener('click', this._editFormRollupButtonClickHandler);
     }
@@ -336,14 +329,21 @@ export default class EditForm extends SmartView {
   }
 
   _offersChangeHandler(evt) { //обработчик выбора опций
-    const clickedOptionTitle = evt.target.parentElement.querySelector('label span:first-child').textContent; //достаёт из разметки наименование кликУемой опции
-    const isClickedOption = this._data.offers.some((option) => option.title === clickedOptionTitle); //флаг проверки наличия кликнутой опции в массиве опций данной точки
+    const clickedOptionTitle = evt.target.parentElement.querySelector('label span:first-child')
+      .textContent; //достаёт из разметки наименование кликУемой опции
+
+    const isClickedOption = this._data.offers.some((option) => option.title === clickedOptionTitle);
+    //...флаг проверки наличия кликнутой опции в массиве опций данной точки
 
     if (isClickedOption) {
-      this._data.offers = this._data.offers.filter((option) => option.title !== clickedOptionTitle); //кликнутая опция удаляется
+      this._data.offers = this._data.offers.filter((option) => option.title !== clickedOptionTitle);
+      //...кликнутая опция удаляется
     } else {
-      const clickedOptionPrice = evt.target.parentElement.querySelector('label span:last-child').textContent; //достаёт из раметки цену кликуемой опции
-      const ClickedOption = {title: clickedOptionTitle, price: parseInt(clickedOptionPrice, RADIX_10)}; //создаёт объект кликнутой опции
+      const clickedOptionPrice = evt.target.parentElement.querySelector('label span:last-child')
+        .textContent; //достаёт из раметки цену кликуемой опции
+
+      const ClickedOption = {title: clickedOptionTitle,
+        price: parseInt(clickedOptionPrice, RADIX_10)}; //создаёт объект кликнутой опции
 
       this._data.offers.unshift(ClickedOption);
       //...добавляет объект кликнутой опции в массив опций данной точки
@@ -361,10 +361,18 @@ export default class EditForm extends SmartView {
   }
 
   _setInnerHandlers() { //вешает "внутренние" обработчики на форму редактирования
-    this.getElement().querySelector('.event__type-group').addEventListener('change', this._typeFieldsetChangeHandler); //вешает обработчик на fieldset выбора типа точки
-    this.getElement().querySelector('.event__input--destination').addEventListener('change', this._destinationInputChangeHandler); //вешает обработчик на input ввода названия города
-    this.getElement().querySelector('.event__input--price').addEventListener('change', this._basePriceInputChangeHandler); //вешает обработчик на input ввода цены
-    this.getElement().querySelector('.event__available-offers').addEventListener('change', this._offersChangeHandler); //вешает обработчик на опции
+    this.getElement().querySelector('.event__type-group')
+      .addEventListener('change', this._typeFieldsetChangeHandler);
+    //...вешает обработчик на fieldset выбора типа точки
+    this.getElement().querySelector('.event__input--destination')
+      .addEventListener('change', this._destinationInputChangeHandler);
+    //...вешает обработчик на input ввода названия города
+    this.getElement().querySelector('.event__input--price')
+      .addEventListener('change', this._basePriceInputChangeHandler);
+    //..вешает обработчик на input ввода цены
+    this.getElement().querySelector('.event__available-offers')
+      .addEventListener('change', this._offersChangeHandler);
+    //..вешает обработчик на опции
   }
 
   _setDateFromPicker() { // устанавливает окно ввода даты старта
@@ -378,8 +386,15 @@ export default class EditForm extends SmartView {
       {
         enableTime: true,
         dateFormat: 'd/m/y H:i',
-        maxDate: `${this._data.dateTo.format('DD')}/${this._data.dateTo.format('MM')}/${this._data.dateTo.format('YY')} ${this._data.dateTo.format('HH')}:${this._data.dateTo.format('mm')}`,
-        defaultDate: `${this._data.dateFrom.format('DD')}/${this._data.dateFrom.format('MM')}/${this._data.dateFrom.format('YY')} ${this._data.dateFrom.format('HH')}:${this._data.dateFrom.format('mm')}`,
+
+        maxDate: `${this._data.dateTo.format('DD')}/${this._data.dateTo.format('MM')}/
+        ${this._data.dateTo.format('YY')} ${this._data.dateTo.format('HH')}:
+        ${this._data.dateTo.format('mm')}`,
+
+        defaultDate: `${this._data.dateFrom.format('DD')}/${this._data.dateFrom.format('MM')}/
+        ${this._data.dateFrom.format('YY')} ${this._data.dateFrom.format('HH')}:
+        ${this._data.dateFrom.format('mm')}`,
+
         onClose: this._dateFromChangeHandler, //колбэк на изменение выбранной даты
       },
     );
@@ -402,8 +417,15 @@ export default class EditForm extends SmartView {
       {
         enableTime: true,
         dateFormat: 'd/m/y H:i',
-        minDate: `${this._data.dateFrom.format('DD')}/${this._data.dateFrom.format('MM')}/${this._data.dateFrom.format('YY')} ${this._data.dateFrom.format('HH')}:${this._data.dateFrom.format('mm')}`,
-        defaultDate: `${this._data.dateTo.format('DD')}/${this._data.dateTo.format('MM')}/${this._data.dateTo.format('YY')} ${this._data.dateTo.format('HH')}:${this._data.dateTo.format('mm')}`,
+
+        minDate: `${this._data.dateFrom.format('DD')}/${this._data.dateFrom.format('MM')}/
+        ${this._data.dateFrom.format('YY')} ${this._data.dateFrom.format('HH')}:
+        ${this._data.dateFrom.format('mm')}`,
+
+        defaultDate: `${this._data.dateTo.format('DD')}/${this._data.dateTo.format('MM')}/
+        ${this._data.dateTo.format('YY')} ${this._data.dateTo.format('HH')}:
+        ${this._data.dateTo.format('mm')}`,
+
         onClose: this._dateToChangeHandler, //колбэк на изменение выбранной даты
       },
     );
