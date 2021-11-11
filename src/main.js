@@ -1,15 +1,12 @@
 import SiteMenuView from './view/site-menu.js';
 import InfoAndPriceView from './view/info-price.js';
-//import {generatePoint} from './mock/point.js';
 import { getRouteDates, getRoutePrice, getRouteName } from './utils/route.js';
 import {remove, render, RenderPosition} from './utils/render.js';
 import TripPresenter from './presenter/trip.js';
 import PointsModel from './model/points.js';
 import FilterModel from './model/filter.js';
 import FilterPresenter from './presenter/filter.js';
-//import { possibleOffers } from './mock/point.js';
-import { MenuItem, UpdateType, BlankPossibleOffers,
-  blankPossibleDestinations } from './utils/const.js';
+import { MenuItem, UpdateType, BlankPossibleOffers} from './utils/const.js';
 import StatisticsView from './view/statistics.js';
 import { getMoneyByTypeData, getPointsNumberByTypeData, getDurationByTypeData}
   from  './utils/statistics.js';
@@ -98,8 +95,6 @@ document.querySelector('.trip-main__event-add-btn').addEventListener('click', (e
   tripPresenter.createPoint();
 });
 
-const points = pointsModel.getPoints();
-
 Promise
   .all([api.getOffers(), api.getDestinations(), api.getPoints()])
   .then(([serverOffers, serverDestinations, serverPoints]) => {
@@ -129,5 +124,3 @@ Promise
     }
 
   });
-
-export {points};

@@ -1,5 +1,3 @@
-import {points} from '../main.js';
-import {getCitiesUniqueNames} from '../utils/route.js';
 import { BlankPoint, blankPossibleDestinations } from '../utils/const.js';
 import SmartView from './smart.js';
 import flatpickr from 'flatpickr';
@@ -223,7 +221,6 @@ export default class EditForm extends SmartView {
     this._dateToPicker = null;
     this._possibleOffers = possibleOffers;
     this._possibleDestinations = possibleDestinations;
-    this._citiesNames = getCitiesUniqueNames(points);
 
     this._editFormRollupButtonClickHandler = this._editFormRollupButtonClickHandler.bind(this);
     this._editFormSubmitButtonClickHandler = this._editFormSubmitButtonClickHandler.bind(this);
