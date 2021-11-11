@@ -90,17 +90,6 @@ export const getRoutePrice = (points, possibleOffers) => { // вернуть с�
   return routePrice;
 };
 
-export const getCitiesUniqueNames = (points) => {
-  // выдаёт отсортированный массив уникальных названий городов из массива точек маршрута
-  let citiesNames = new Set();
-  points.forEach((point) => {
-    citiesNames.add(point.destination.name);
-  });
-  citiesNames = Array.from(citiesNames).sort();
-  // преобразовывает сет в массив, чтобы отсортировать данные по алфавиту
-  return citiesNames;
-};
-
 export const getDestinationsFromPoints = (points) => {
   //...создаёт массив объектов пунктов назначения из массива точек маршрута
   const destinationsFromPoints = [];
