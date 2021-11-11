@@ -46,7 +46,7 @@ pointsModel.addObserver(() => {
   );
 });
 
-const tripPresenter = new TripPresenter(tripEventsElement, pointsModel, filterModel);
+const tripPresenter = new TripPresenter(tripEventsElement, pointsModel, filterModel, api);
 const filterPresenter = new FilterPresenter(filtersElement, filterModel, pointsModel);
 
 let statisticsComponent = null;

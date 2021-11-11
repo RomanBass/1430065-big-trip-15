@@ -11,7 +11,7 @@ import { BlankPoint } from '../utils/const.js';
 import LoadingView from '../view/loading.js';
 
 export default class Trip {
-  constructor(tripContainer, pointsModel, filterModel) {
+  constructor(tripContainer, pointsModel, filterModel, api) {
     this._pointsModel = pointsModel;
     this._filterModel = filterModel;
     this._tripContainer = tripContainer;
@@ -22,6 +22,7 @@ export default class Trip {
     this._currentSortType = SortType.BY_DATE_FROM;
     this._filterType = FilterType.EVERYTHING;
     this._isLoading = true;
+    this._api = api;
 
     this._handleModeChange = this._handleModeChange.bind(this);
     this._handleSortTypeChange = this._handleSortTypeChange.bind(this);
@@ -109,7 +110,9 @@ export default class Trip {
   _handleViewAction(actionType, updateType, update) { //обрабатывает как отражается на модели действие на представлении
     switch (actionType) {
       case UserAction.UPDATE_POINT:
-        this._pointsModel.updatePoint(updateType, update);
+        this._api.updatePoint(update).then((response) => {
+          this._pointsModel.updatePoint(updateType, response);
+        });
         break;
       case UserAction.ADD_POINT:
         this._pointsModel.addPoint(updateType, update);
