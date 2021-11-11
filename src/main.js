@@ -8,12 +8,12 @@ import PointsModel from './model/points.js';
 import FilterModel from './model/filter.js';
 import FilterPresenter from './presenter/filter.js';
 //import { possibleOffers } from './mock/point.js';
-import { MenuItem, UpdateType } from './utils/const.js';
+import { MenuItem, UpdateType, BlankPossibleOffers,
+  blankPossibleDestinations } from './utils/const.js';
 import StatisticsView from './view/statistics.js';
 import { getMoneyByTypeData, getPointsNumberByTypeData, getDurationByTypeData}
   from  './utils/statistics.js';
 import Api from './api.js';
-import { BlankPossibleOffers } from './utils/const.js';
 import { getDestinationsFromPoints } from './utils/route.js';
 
 const AUTHORIZATION = 'Basic df9df9df8sd8fg8h';
@@ -100,44 +100,34 @@ document.querySelector('.trip-main__event-add-btn').addEventListener('click', (e
 
 const points = pointsModel.getPoints();
 
-// Promise
-//   .all([api.getOffers(), api.getDestinations(), api.getPoints()])
-//   .then((value) => console.log(value));
+Promise
+  .all([api.getOffers(), api.getDestinations(), api.getPoints()])
+  .then(([serverOffers, serverDestinations, serverPoints]) => {
 
+    if (Object.keys(serverOffers).length) {
+      //если не загрузились ОПЦИИ, то используется заглушка BlankPossibleOffers...
+      //...и работа происходит без опций
+      pointsModel.setOffers(serverOffers);
+    } else {
+      pointsModel.setOffers(BlankPossibleOffers);
+    }
 
-api.getOffers()
-  .then((offersFromServer) => {
-    pointsModel.setOffers(offersFromServer);
-  })
-  .catch((err) => {
-    console.log(err);
-    pointsModel.setOffers(BlankPossibleOffers);
-  })
+    if (serverDestinations.length){
+      //если не загрузились НАЗНАЧЕНИЯ, то они извлекаются из ТОЧЕК...
+      //...и используются в дальнейшей работе
+      pointsModel.setDestinations(serverDestinations);
+    } else {
+      pointsModel.setDestinations(getDestinationsFromPoints(serverPoints));
+    }
 
-  .then(() => {
-    api.getDestinations()
-      .then((serverDestinations) => {
-        pointsModel.setDestinations(serverDestinations);
-      })
-      .catch((err) => {
-        console.log(err);
-      })
+    if (serverPoints.length) {
+      //если не загрузились ТОЧКИ, то используется пустой массив...
+      //...и можно только добавлять и удалять свои ТОЧКИ
+      pointsModel.setPoints(UpdateType.INIT, serverPoints);
+    } else {
+      pointsModel.setPoints(UpdateType.INIT, []);
+    }
 
-      .then(() => {
-        api.getPoints()
-          .then((pointsFromServer) => {
-
-            if (!pointsModel.getDestinations().length) {
-              pointsModel.setDestinations(getDestinationsFromPoints(pointsFromServer));
-            }
-
-            pointsModel.setPoints(UpdateType.INIT, pointsFromServer);
-          })
-          .catch((err) => {
-            console.log(err);
-            pointsModel.setPoints(UpdateType.INIT, []);
-          });
-      });
   });
 
 export {points};
