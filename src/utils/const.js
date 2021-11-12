@@ -1,9 +1,8 @@
 import dayjs from 'dayjs';
 import { nanoid } from 'nanoid';
 
-export const CITIES = ['London', 'Paris', 'Beijing', 'Tokyo', 'Melbourne'];
-export const TYPES = ['taxi', 'bus', 'train', 'ship', 'transport', 'drive', 'flight', 'check-in', 'sightseeing', 'restaurant'];
-export const PHOTO_DESCRIPTIONS = ['Beautiful Mountain Sea', 'Island archipelago', 'River Delta', 'Desert Storm', 'Snow Mountains'];
+export const TYPES = ['taxi', 'bus', 'train', 'ship', 'transport', 'drive', 'flight',
+  'check-in', 'sightseeing', 'restaurant'];
 
 export const BlankPossibleOffers = {
   bus: [],
@@ -17,23 +16,10 @@ export const BlankPossibleOffers = {
   train: [],
 };
 
-export const DESCRIPTION_SENTENCES = [
-  'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-  'Cras aliquet varius magna, non porta ligula feugiat eget.',
-  'Fusce tristique felis at fermentum pharetra.',
-  'Aliquam id orci ut lectus varius viverra.',
-  'Nullam nunc ex, convallis sed finibus eget, sollicitudin eget ante.',
-  'Phasellus eros mauris, condimentum sed nibh vitae, sodales efficitur ipsum.',
-  'Sed blandit, eros vel aliquam faucibus, purus ex euismod diam, eu luctus nunc ante ut dui.',
-  'Sed sed nisi sed augue convallis suscipit in sed felis.',
-  'Aliquam erat volutpat.',
-  'Nunc fermentum tortor ac porta dapibus.',
-  'In rutrum ac purus sit amet tempus.'];
-
 export const AddFormData = { // данные для дефолтной точки
   BASE_PRICE: 100,
   TRIP_DURATION: 3,
-  DESTINATION: {description: '', name: CITIES[0], pictures: []},
+  DESTINATION: {description: 'The nicest city of the world', name: 'New City', pictures: []},
   ID: nanoid(),
   IS_FAVORITE: false,
   OFFERS: [],
@@ -45,7 +31,6 @@ export const BlankPoint = { // дефолтная точка для формы �
   dateFrom: dayjs(),
   dateTo: dayjs().add(AddFormData.TRIP_DURATION, 'day'),
   destination: AddFormData.DESTINATION,
-  //id: AddFormData.ID,
   isFavorite: AddFormData.IS_FAVORITE,
   offers: AddFormData.OFFERS,
   type: AddFormData.TYPE,

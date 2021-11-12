@@ -1,6 +1,8 @@
 import {getDuration} from '../utils/common.js';
-import {makeFavorite} from '../mock/point.js';
 import AbstractView from './abstract.js';
+
+const makeFavorite = (isFavorite) => isFavorite === true ? 'active' : '';
+//...добавляется к точке идентификатор "избранная", делая звёздочку жёлтой
 
 const createChosenOptionTemplate = (offer) => {
   const {title, price} = offer;
