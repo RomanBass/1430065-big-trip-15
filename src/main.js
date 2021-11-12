@@ -13,7 +13,7 @@ import { getMoneyByTypeData, getPointsNumberByTypeData, getDurationByTypeData}
 import Api from './api.js';
 import { getDestinationsFromPoints } from './utils/route.js';
 
-const AUTHORIZATION = 'Basic df9df9df8sd8fg8h';
+const AUTHORIZATION = 'Basic df9df9df8sd8fg8u';
 const END_POINT = 'https://15.ecmascript.pages.academy/big-trip';
 
 const siteHeaderElement = document.querySelector('.page-header'); // крупный блок

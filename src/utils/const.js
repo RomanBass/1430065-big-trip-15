@@ -45,7 +45,7 @@ export const BlankPoint = { // дефолтная точка для формы �
   dateFrom: dayjs(),
   dateTo: dayjs().add(AddFormData.TRIP_DURATION, 'day'),
   destination: AddFormData.DESTINATION,
-  id: AddFormData.ID,
+  //id: AddFormData.ID,
   isFavorite: AddFormData.IS_FAVORITE,
   offers: AddFormData.OFFERS,
   type: AddFormData.TYPE,
