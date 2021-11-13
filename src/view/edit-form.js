@@ -26,7 +26,7 @@ const createPhotoTemplate = (picture) => `<img class="event__photo" src="${pictu
 alt="${picture.description}">`;  //возвращает образец ДОМ элемента фотографии
 
 const createEditFormTemplate = (
-  point = BlankPoint,   possibleOffers, possibleDestinations = blankPossibleDestinations) => {
+  point = BlankPoint, possibleOffers, possibleDestinations = blankPossibleDestinations) => {
   const {destination, basePrice, type, dateFrom, dateTo, offers} = point;
   const {description, name, pictures} = destination;
 
