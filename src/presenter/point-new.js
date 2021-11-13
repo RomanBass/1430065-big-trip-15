@@ -1,7 +1,6 @@
 import EditFormView from '../view/edit-form.js';
 import { render, RenderPosition, remove } from '../utils/render';
 import { UserAction, UpdateType } from '../utils/const.js';
-import { nanoid } from 'nanoid';
 
 export default class PointNew {
   constructor(eventListContainer, changeData) {
@@ -39,7 +38,7 @@ export default class PointNew {
     this._changeData(
       UserAction.ADD_POINT,
       UpdateType.MAJOR,
-      Object.assign({}, point, {id: nanoid()}),
+      point,
     );
     this.destroy();
   }

@@ -1,5 +1,4 @@
 import dayjs from 'dayjs';
-import { nanoid } from 'nanoid';
 
 export const TYPES = ['taxi', 'bus', 'train', 'ship', 'transport', 'drive', 'flight',
   'check-in', 'sightseeing', 'restaurant'];
@@ -20,7 +19,6 @@ export const AddFormData = { // данные для дефолтной точк�
   BASE_PRICE: 100,
   TRIP_DURATION: 3,
   DESTINATION: {description: 'The nicest city of the world', name: 'New City', pictures: []},
-  ID: nanoid(),
   IS_FAVORITE: false,
   OFFERS: [],
   TYPE: 'taxi',
