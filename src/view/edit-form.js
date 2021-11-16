@@ -259,6 +259,7 @@ export default class EditForm extends SmartView {
 
   _editFormSubmitButtonClickHandler(evt) {
     evt.preventDefault();
+    this._showSaving();
     this._callback.editFormSubmitButtonClick(this._data);
   }
 
@@ -266,6 +267,10 @@ export default class EditForm extends SmartView {
     this._callback.editFormSubmitButtonClick = callback;
     this.getElement().querySelector('form')
       .addEventListener('submit', this._editFormSubmitButtonClickHandler);
+  }
+
+  _showSaving() {
+    this.getElement().querySelector('.event__save-btn').textContent = 'Saving';
   }
 
   _deletePointClickHandler(evt) {
