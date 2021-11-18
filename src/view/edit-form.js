@@ -260,6 +260,7 @@ export default class EditForm extends SmartView {
   _editFormSubmitButtonClickHandler(evt) {
     evt.preventDefault();
     this._showSaving();
+    this._showDisabled();
     this._callback.editFormSubmitButtonClick(this._data);
   }
 
@@ -270,11 +271,13 @@ export default class EditForm extends SmartView {
   }
 
   _showSaving() {
-    this.getElement().querySelector('.event__save-btn').textContent = 'Saving';
+    this.getElement().querySelector('.event__save-btn').textContent = 'Saving...';
   }
 
   _deletePointClickHandler(evt) {
     evt.preventDefault();
+    this._showDeleting();
+    this._showDisabled();
     this._callback.deletePointClickHandler(this._data);
   }
 
@@ -282,6 +285,16 @@ export default class EditForm extends SmartView {
     this._callback.deletePointClickHandler = callback;
     this.getElement().querySelector('.event__reset-btn')
       .addEventListener('click', this._deletePointClickHandler);
+  }
+
+  _showDeleting() {
+    this.getElement().querySelector('.event__reset-btn').textContent = 'Deleting...';
+  }
+
+  _showDisabled() {
+    this.getElement().querySelectorAll(
+      'fieldset, input:not(.visually-hidden), button, .event__offer-checkbox')
+      .forEach((element) => element.disabled = true);
   }
 
   _addFormCancelHandler(evt) {

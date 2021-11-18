@@ -40,7 +40,6 @@ export default class PointNew {
       UpdateType.MAJOR,
       point,
     );
-    this.destroy();
   }
 
   _handleAddFormCancel() { // обработчик на кнопку Cancel для удаления формы добавления

@@ -120,7 +120,6 @@ export default class Point {
       UpdateType.MINOR,
       point,
     );
-    this._replaceEditFormToPoint();
   }
 
   _handleDeletePoint(point) {
