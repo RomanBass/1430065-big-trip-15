@@ -274,6 +274,10 @@ export default class EditForm extends SmartView {
     this.getElement().querySelector('.event__save-btn').textContent = 'Saving...';
   }
 
+  showSave() {
+    this.getElement().querySelector('.event__save-btn').textContent = 'Save';
+  }
+
   _deletePointClickHandler(evt) {
     evt.preventDefault();
     this._showDeleting();
@@ -291,10 +295,24 @@ export default class EditForm extends SmartView {
     this.getElement().querySelector('.event__reset-btn').textContent = 'Deleting...';
   }
 
+  showDelete() {
+    this.getElement().querySelector('.event__reset-btn').textContent = 'Delete';
+  }
+
   _showDisabled() {
     this.getElement().querySelectorAll(
       'fieldset, input:not(.visually-hidden), button, .event__offer-checkbox')
       .forEach((element) => element.disabled = true);
+  }
+
+  showEnabled() {
+    this.getElement().querySelectorAll(
+      'fieldset, input:not(.visually-hidden), button, .event__offer-checkbox')
+      .forEach((element) => element.disabled = false);
+  }
+
+  shake() {
+    this.getElement().classList.add('shake');
   }
 
   _addFormCancelHandler(evt) {

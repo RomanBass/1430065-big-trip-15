@@ -41,6 +41,8 @@ export default class Point {
     this._editFormComponent.setDeletePointClickHandler(this._handleDeletePoint);
     this._pointComponent.setFavoriteButtonClickHandler(this._handleFavoriteButtonClick);
 
+    //this._editFormComponent.showSave();
+
     if (this._point.id === BlankPoint.id) { // чтобы не отрисовывалась точка по данным формы добавления
       return;
     }
@@ -128,5 +130,16 @@ export default class Point {
       UpdateType.MAJOR,
       point,
     );
+  }
+
+  abortingFormSubmit() {
+    this._editFormComponent.showSave();
+    this._editFormComponent.showEnabled();
+    this._editFormComponent.shake();
+  }
+
+  abortingPointDelete() {
+    this._editFormComponent.showDelete();
+    this._editFormComponent.showEnabled();
   }
 }
