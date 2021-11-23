@@ -311,10 +311,6 @@ export default class EditForm extends SmartView {
       .forEach((element) => element.disabled = false);
   }
 
-  shake() {
-    this.getElement().classList.add('shake');
-  }
-
   _addFormCancelHandler(evt) {
     //...добавляет обработчик на кнопку Cancel для удаления формы добавления
     evt.preventDefault();

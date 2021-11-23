@@ -56,6 +56,7 @@ export default class PointNew {
   abortingPointAdding() {
     this._editFormComponent.showSave();
     this._editFormComponent.showEnabled();
+    this._editFormComponent.shake();
   }
 
 }

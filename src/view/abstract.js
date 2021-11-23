@@ -28,15 +28,10 @@ export default class Abstract {
     this._element = null;
   }
 
-  // shake() {
-  //   this.getElement().style.animation = `shake ${SHAKE_ANIMATION_TIMEOUT / 1000}s`;
-  //   setTimeout(() => {
-  //     this.getElement().style.animation = '';
-  //     //callback();
-  //   }, SHAKE_ANIMATION_TIMEOUT);
-  // }
-
-  // shake() {
-  //   this.getElement().classList.add('shake');
-  // }
+  shake() {
+    this.getElement().classList.add('shake');
+    setTimeout(() => {
+      this.getElement().classList.remove('shake');
+    }, SHAKE_ANIMATION_TIMEOUT);
+  }
 }
